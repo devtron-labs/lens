@@ -3,7 +3,7 @@ Application to analyse git and relase data
 ### Initial testing the application
 ```bash
 curl -XPOST localhost:8080/new-deployment-event -d '{
-  "ApplicationId": 6,
+  "ApplicationId": 7,
   "EnvironmentId": 1,
   "CiArtifactId": 9,
   "ReleaseId": 16,
