@@ -1,4 +1,5 @@
-//+build wireinject
+//go:build wireinject
+// +build wireinject
 
 package main
 
@@ -35,7 +36,7 @@ func InitializeApp() (*App, error) {
 		gitSensor.GetGitSensorConfig,
 		gitSensor.NewGitSensorSession,
 		wire.Bind(new(gitSensor.GitSensorClient), new(*gitSensor.GitSensorClientImpl)),
-		internal.NewNatsConnection,
+		internal.NewPubSubClient,
 		client.NewNatsSubscription,
 	)
 	return &App{}, nil

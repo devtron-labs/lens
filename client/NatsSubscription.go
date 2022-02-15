@@ -1,28 +1,28 @@
 package client
 
 import (
+	"encoding/json"
+
 	"github.com/devtron-labs/lens/internal"
 	"github.com/devtron-labs/lens/pkg"
-	"encoding/json"
-	"github.com/nats-io/stan"
+	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
-	"time"
 )
 
 type NatsSubscription interface {
 }
 
 type NatsSubscriptionImpl struct {
-	nats             stan.Conn
+	pubSubClient     inter
 	logger           *zap.SugaredLogger
 	ingestionService pkg.IngestionService
 }
 
-func NewNatsSubscription(nats stan.Conn,
+func NewNatsSubscription(pubSubClient *internal.PubSubClient,
 	logger *zap.SugaredLogger,
-	ingestionService pkg.IngestionService, ) (*NatsSubscriptionImpl, error) {
+	ingestionService pkg.IngestionService) (*NatsSubscriptionImpl, error) {
 	ns := &NatsSubscriptionImpl{
-		nats:             nats,
+		PubSubClient:     *internal.PubSubClient,
 		logger:           logger,
 		ingestionService: ingestionService,
 	}
@@ -30,8 +30,8 @@ func NewNatsSubscription(nats stan.Conn,
 }
 
 func (impl NatsSubscriptionImpl) Subscribe() error {
-	aw, _ := time.ParseDuration("20s")
-	_, err := impl.nats.QueueSubscribe(internal.POLL_CD_SUCCESS, internal.POLL_CD_SUCCESS_GRP, func(msg *stan.Msg) {
+	//aw, _ := time.ParseDuration("20s")
+	_, err := impl.PubSubClient.QueueSubscribe(internal.POLL_CD_SUCCESS, internal.POLL_CD_SUCCESS_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		defer msg.Ack()
 		deploymentEvent := &pkg.DeploymentEvent{}
@@ -40,14 +40,13 @@ func (impl NatsSubscriptionImpl) Subscribe() error {
 			impl.logger.Errorw("err in reading msg", "err", err, "msg", string(msg.Data))
 			return
 		}
-		impl.logger.Debugw("deploymentEvent", "id", deploymentEvent, )
+		impl.logger.Debugw("deploymentEvent", "id", deploymentEvent)
 		release, err := impl.ingestionService.ProcessDeploymentEvent(deploymentEvent)
 		if err != nil {
 			impl.logger.Errorw("err in processing deploymentEvent", "deploymentEvent", deploymentEvent, "err", err)
 			return
 		}
 		impl.logger.Infow("app release saved ", "apprelease", release)
-	}, stan.DurableName(internal.POLL_CD_SUCCESS_DURABLE), stan.StartWithLastReceived(), stan.SetManualAckMode(), stan.AckWait(aw), stan.MaxInflight(1))
-	//s.Close()
+	}, nats.Durable(internal.POLL_CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(""))
 	return err
 }
