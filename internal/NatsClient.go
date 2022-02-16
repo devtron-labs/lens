@@ -19,7 +19,7 @@ type PubSubClient struct {
 	JetStrCtxt nats.JetStreamContext
 }
 
-type PubSubConfig11 struct {
+type PubSubConfig struct {
 	NatsServerHost string `env:"NATS_SERVER_HOST" envDefault:"nats://localhost:4222"`
 }
 

@@ -13,16 +13,16 @@ type NatsSubscription interface {
 }
 
 type NatsSubscriptionImpl struct {
-	pubSubClient     inter
+	PubSubClient     internal.PubSubClient
 	logger           *zap.SugaredLogger
 	ingestionService pkg.IngestionService
 }
 
-func NewNatsSubscription(pubSubClient *internal.PubSubClient,
+func NewNatsSubscription(pubSubClient internal.PubSubClient,
 	logger *zap.SugaredLogger,
 	ingestionService pkg.IngestionService) (*NatsSubscriptionImpl, error) {
 	ns := &NatsSubscriptionImpl{
-		PubSubClient:     *internal.PubSubClient,
+		PubSubClient:     pubSubClient,
 		logger:           logger,
 		ingestionService: ingestionService,
 	}
