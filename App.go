@@ -10,7 +10,7 @@ import (
 	"github.com/devtron-labs/lens/api"
 	"github.com/devtron-labs/lens/client"
 	"github.com/devtron-labs/lens/pkg"
-	"github.com/go-pg/pg"
+	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
 )
 

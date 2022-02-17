@@ -1,9 +1,12 @@
 package sql
 
 import (
-	"github.com/go-pg/pg"
-	"go.uber.org/zap"
 	"time"
+
+	"context"
+
+	pg "github.com/go-pg/pg/v10"
+	"go.uber.org/zap"
 )
 
 type AppRelease struct {
@@ -59,6 +62,8 @@ const (
 	ReleaseTypeDetermined
 	LeadTimeFetch
 )
+
+var ctx = context.Background()
 
 func (ProcessStage ProcessStage) String() string {
 	return [...]string{"Init", "ReleaseTypeDetermined", "LeadTimeFetch"}[ProcessStage]
@@ -141,7 +146,7 @@ func (impl *AppReleaseRepositoryImpl) GetPreviousRelease(appId, environmentId in
 
 func (impl *AppReleaseRepositoryImpl) GetReleaseBetween(appId, environmentId int,
 	from time.Time, //inclusive
-	to time.Time,   //inclusive
+	to time.Time, //inclusive
 ) ([]AppRelease, error) {
 	var appReleases []AppRelease
 	err := impl.dbConnection.
@@ -168,9 +173,8 @@ func (impl *AppReleaseRepositoryImpl) cleanAppDataForEnvironment(appId, environm
 	}
 }
 
-//----------
 func (impl *AppReleaseRepositoryImpl) CleanAppDataForEnvironment(appId, environmentId int) error {
-	err := impl.dbConnection.RunInTransaction(func(tx *pg.Tx) error {
+	err := impl.dbConnection.RunInTransaction(ctx, func(tx *pg.Tx) error {
 		err := impl.leadTimeRepository.CleanAppDataForEnvironment(appId, environmentId, tx)
 		if err != nil {
 			impl.logger.Errorw("error in cleaning pipeline", "appId", appId, "environmentId", environmentId, "err", err)
@@ -190,5 +194,3 @@ func (impl *AppReleaseRepositoryImpl) CleanAppDataForEnvironment(appId, environm
 	})
 	return err
 }
-
-//--------------

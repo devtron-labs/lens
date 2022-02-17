@@ -1,10 +1,12 @@
 package sql
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/caarlos0/env"
-	"github.com/go-pg/pg"
+	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
-	"time"
 )
 
 type Config struct {
@@ -15,6 +17,20 @@ type Config struct {
 	Database        string `env:"PG_DATABASE" envDefault:"lens"`
 	ApplicationName string `env:"APP" envDefault:"lens"`
 	LogQuery        bool   `env:"PG_LOG_QUERY" envDefault:"true"`
+}
+
+func (d dbLogger) BeforeQuery(c context.Context, q *pg.QueryEvent) (context.Context, error) {
+	return c, nil
+}
+
+func (d dbLogger) AfterQuery(c context.Context, q *pg.QueryEvent) error {
+	_, err := fmt.Println(q.FormattedQuery())
+	return err
+}
+
+type dbLogger struct {
+	beforeQueryMethod func(context.Context, *pg.QueryEvent) (context.Context, error)
+	afterQueryMethod  func(context.Context, *pg.QueryEvent) error
 }
 
 func GetConfig() (*Config, error) {
@@ -44,20 +60,7 @@ func NewDbConnection(cfg *Config, logger *zap.SugaredLogger) (*pg.DB, error) {
 	}
 	//--------------
 	if cfg.LogQuery {
-		dbConnection.OnQueryProcessed(func(event *pg.QueryProcessedEvent) {
-			query, err := event.FormattedQuery()
-			if err != nil {
-				panic(err)
-			}
-			logger.Infow("query time",
-				"duration", time.Since(event.StartTime),
-				"query", query)
-		})
+		dbConnection.AddQueryHook(dbLogger{})
 	}
 	return dbConnection, err
 }
-
-//TODO: call it from somewhere
-/*func closeConnection() error {
-	return dbConnection.Close()
-}*/

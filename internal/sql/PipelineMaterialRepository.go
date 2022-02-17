@@ -1,7 +1,7 @@
 package sql
 
 import (
-	"github.com/go-pg/pg"
+	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
 )
 
