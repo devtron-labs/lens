@@ -13,16 +13,16 @@ type NatsSubscription interface {
 }
 
 type NatsSubscriptionImpl struct {
-	PubSubClient     internal.PubSubClient
+	pubSubClient     *internal.PubSubClient
 	logger           *zap.SugaredLogger
 	ingestionService pkg.IngestionService
 }
 
-func NewNatsSubscription(pubSubClient internal.PubSubClient,
+func NewNatsSubscription(pubSubClient *internal.PubSubClient,
 	logger *zap.SugaredLogger,
 	ingestionService pkg.IngestionService) (*NatsSubscriptionImpl, error) {
 	ns := &NatsSubscriptionImpl{
-		PubSubClient:     pubSubClient,
+		pubSubClient:     pubSubClient,
 		logger:           logger,
 		ingestionService: ingestionService,
 	}
@@ -31,7 +31,7 @@ func NewNatsSubscription(pubSubClient internal.PubSubClient,
 
 func (impl NatsSubscriptionImpl) Subscribe() error {
 	//aw, _ := time.ParseDuration("20s")
-	_, err := impl.PubSubClient.QueueSubscribe(internal.POLL_CD_SUCCESS, internal.POLL_CD_SUCCESS_GRP, func(msg *nats.Msg) {
+	_, err := impl.pubSubClient.JetStrCtxt.QueueSubscribe(internal.POLL_CD_SUCCESS, internal.POLL_CD_SUCCESS_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		defer msg.Ack()
 		deploymentEvent := &pkg.DeploymentEvent{}

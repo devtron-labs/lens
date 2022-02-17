@@ -1,11 +1,12 @@
 package pkg
 
 import (
+	"time"
+
 	"github.com/devtron-labs/lens/client/gitSensor"
 	"github.com/devtron-labs/lens/internal/sql"
-	"github.com/go-pg/pg"
+	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
-	"time"
 )
 
 type IngestionService interface {
@@ -178,10 +179,10 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 
 		leadTime := &sql.LeadTime{
 			AppReleaseId:       appRelease.Id,
-			CommitTime:         oldest.Committer.Date, //
-			CommitHash:         oldest.Hash.Long,          //
-			PipelineMaterialId: oldestId,           //
-			LeadTime:           appRelease.TriggerTime.Sub(oldest.Author.Date),   //
+			CommitTime:         oldest.Committer.Date,                          //
+			CommitHash:         oldest.Hash.Long,                               //
+			PipelineMaterialId: oldestId,                                       //
+			LeadTime:           appRelease.TriggerTime.Sub(oldest.Author.Date), //
 		}
 		_, err = impl.leadTimeRepository.Save(leadTime)
 		if err != nil {

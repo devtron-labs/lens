@@ -1,9 +1,10 @@
 package sql
 
 import (
-	"github.com/go-pg/pg"
-	"go.uber.org/zap"
 	"time"
+
+	pg "github.com/go-pg/pg/v10"
+	"go.uber.org/zap"
 )
 
 type LeadTime struct {

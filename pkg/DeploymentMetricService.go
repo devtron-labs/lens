@@ -1,10 +1,11 @@
 package pkg
 
 import (
-	"github.com/devtron-labs/lens/internal/sql"
-	"github.com/go-pg/pg"
-	"go.uber.org/zap"
 	"time"
+
+	"github.com/devtron-labs/lens/internal/sql"
+	pg "github.com/go-pg/pg/v10"
+	"go.uber.org/zap"
 )
 
 const (
@@ -16,16 +17,16 @@ type DeploymentMetricService interface {
 }
 
 type Metrics struct {
-	Series                []*Metric `json:"series"`
-	AverageCycleTime      float64   `json:"average_cycle_time"`
-	AverageLeadTime       float64   `json:"average_lead_time"`
-	ChangeFailureRate     float64   `json:"change_failure_rate"`
-	AverageRecoveryTime   float64   `json:"average_recovery_time"`
-	AverageDeploymentSize float32   `json:"average_deployment_size"`
-	AverageLineAdded      float32   `json:"average_line_added"`
-	AverageLineDeleted    float32   `json:"average_line_deleted"`
-	LastFailedTime        string    `json:"last_failed_time"`
-	RecoveryTimeLastFailed	float64	`json:"recovery_time_last_failed"`
+	Series                 []*Metric `json:"series"`
+	AverageCycleTime       float64   `json:"average_cycle_time"`
+	AverageLeadTime        float64   `json:"average_lead_time"`
+	ChangeFailureRate      float64   `json:"change_failure_rate"`
+	AverageRecoveryTime    float64   `json:"average_recovery_time"`
+	AverageDeploymentSize  float32   `json:"average_deployment_size"`
+	AverageLineAdded       float32   `json:"average_line_added"`
+	AverageLineDeleted     float32   `json:"average_line_deleted"`
+	LastFailedTime         string    `json:"last_failed_time"`
+	RecoveryTimeLastFailed float64   `json:"recovery_time_last_failed"`
 }
 
 type Metric struct {
@@ -151,7 +152,7 @@ func (impl DeploymentMetricServiceImpl) populateMetrics(appReleases []sql.AppRel
 	}
 
 	if leadTimesCount > 0 {
-		metrics.AverageLeadTime = totalLeadTime/float64(leadTimesCount)
+		metrics.AverageLeadTime = totalLeadTime / float64(leadTimesCount)
 	}
 
 	impl.calculateChangeFailureRateAndRecoveryTime(metrics)
