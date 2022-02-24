@@ -3,7 +3,6 @@ package client
 import (
 	"encoding/json"
 
-	"github.com/devtron-labs/lens/internal"
 	"github.com/devtron-labs/lens/pkg"
 	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
@@ -13,12 +12,12 @@ type NatsSubscription interface {
 }
 
 type NatsSubscriptionImpl struct {
-	pubSubClient     *internal.PubSubClient
+	pubSubClient     *PubSubClient
 	logger           *zap.SugaredLogger
 	ingestionService pkg.IngestionService
 }
 
-func NewNatsSubscription(pubSubClient *internal.PubSubClient,
+func NewNatsSubscription(pubSubClient *PubSubClient,
 	logger *zap.SugaredLogger,
 	ingestionService pkg.IngestionService) (*NatsSubscriptionImpl, error) {
 	ns := &NatsSubscriptionImpl{
@@ -29,9 +28,9 @@ func NewNatsSubscription(pubSubClient *internal.PubSubClient,
 	return ns, ns.Subscribe()
 }
 
+//TODO : adhiran : Work with Nishant to see how we can bind to a specific stream
 func (impl NatsSubscriptionImpl) Subscribe() error {
-	//aw, _ := time.ParseDuration("20s")
-	_, err := impl.pubSubClient.JetStrCtxt.QueueSubscribe(internal.POLL_CD_SUCCESS, internal.POLL_CD_SUCCESS_GRP, func(msg *nats.Msg) {
+	_, err := impl.pubSubClient.JetStrCtxt.QueueSubscribe(POLL_CD_SUCCESS, POLL_CD_SUCCESS_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		defer msg.Ack()
 		deploymentEvent := &pkg.DeploymentEvent{}
@@ -47,6 +46,6 @@ func (impl NatsSubscriptionImpl) Subscribe() error {
 			return
 		}
 		impl.logger.Infow("app release saved ", "apprelease", release)
-	}, nats.Durable(internal.POLL_CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(""))
+	}, nats.Durable(POLL_CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(""))
 	return err
 }

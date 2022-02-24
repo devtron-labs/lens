@@ -2,9 +2,9 @@ package sql
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/caarlos0/env"
+	"github.com/devtron-labs/lens/internal/logger"
 	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
 )
@@ -24,7 +24,8 @@ func (d dbLogger) BeforeQuery(c context.Context, q *pg.QueryEvent) (context.Cont
 }
 
 func (d dbLogger) AfterQuery(c context.Context, q *pg.QueryEvent) error {
-	_, err := fmt.Println(q.FormattedQuery())
+	query, err := q.FormattedQuery()
+	logger.NewSugardLogger().Debugw("Printing formatted query", "query", query)
 	return err
 }
 
@@ -58,7 +59,6 @@ func NewDbConnection(cfg *Config, logger *zap.SugaredLogger) (*pg.DB, error) {
 	} else {
 		logger.Infow("connected with db", "db", cfg)
 	}
-	//--------------
 	if cfg.LogQuery {
 		dbConnection.AddQueryHook(dbLogger{})
 	}

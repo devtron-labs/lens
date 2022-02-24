@@ -21,15 +21,17 @@ type App struct {
 	server           *http.Server
 	db               *pg.DB
 	natsSubscription *client.NatsSubscriptionImpl
+	pubSubClient     *client.PubSubClient
 }
 
-func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, IngestionService pkg.IngestionService, natsSubscription *client.NatsSubscriptionImpl) *App {
+func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, IngestionService pkg.IngestionService, natsSubscription *client.NatsSubscriptionImpl, pubSubClient *client.PubSubClient) *App {
 	return &App{
 		MuxRouter:        MuxRouter,
 		Logger:           Logger,
 		db:               db,
 		natsSubscription: natsSubscription,
 		IngestionService: IngestionService,
+		pubSubClient:     pubSubClient,
 	}
 }
 
@@ -46,7 +48,6 @@ func (app *App) Start() {
 	}
 }
 
-//TODO : adhiran : Why stopping nats connection code was commented out here?
 func (app *App) Stop() {
 	app.Logger.Infow("lens shutdown initiating")
 	timeoutContext, _ := context.WithTimeout(context.Background(), 5*time.Second)
@@ -56,6 +57,14 @@ func (app *App) Stop() {
 	if err != nil {
 		app.Logger.Errorw("error in mux router shutdown", "err", err)
 	}
+
+	//Draining nats connection
+	err = app.pubSubClient.Conn.Drain()
+
+	if err != nil {
+		app.Logger.Errorw("Error while draining nats connection", "error", err)
+	}
+
 	app.Logger.Infow("closing db connection")
 	err = app.db.Close()
 	if err != nil {

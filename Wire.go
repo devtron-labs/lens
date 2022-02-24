@@ -7,7 +7,6 @@ import (
 	"github.com/devtron-labs/lens/api"
 	"github.com/devtron-labs/lens/client"
 	"github.com/devtron-labs/lens/client/gitSensor"
-	"github.com/devtron-labs/lens/internal"
 	"github.com/devtron-labs/lens/internal/logger"
 	"github.com/devtron-labs/lens/internal/sql"
 	"github.com/devtron-labs/lens/pkg"
@@ -36,7 +35,7 @@ func InitializeApp() (*App, error) {
 		gitSensor.GetGitSensorConfig,
 		gitSensor.NewGitSensorSession,
 		wire.Bind(new(gitSensor.GitSensorClient), new(*gitSensor.GitSensorClientImpl)),
-		internal.NewPubSubClient,
+		client.NewPubSubClient,
 		client.NewNatsSubscription,
 	)
 	return &App{}, nil

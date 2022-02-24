@@ -1,4 +1,4 @@
-package internal
+package client
 
 import (
 	"time"
@@ -17,6 +17,7 @@ const (
 type PubSubClient struct {
 	Logger     *zap.SugaredLogger
 	JetStrCtxt nats.JetStreamContext
+	Conn       *nats.Conn
 }
 
 type PubSubConfig struct {
@@ -37,7 +38,12 @@ func NewPubSubClient(logger *zap.SugaredLogger) (*PubSubClient, error) {
 	}
 
 	//Create a jetstream context
-	js, _ := nc.JetStream()
+	js, err := nc.JetStream()
+
+	if err != nil {
+		logger.Errorw("Error while creating jetstream context", "error", err)
+		return nil, err
+	}
 
 	natsClient := &PubSubClient{
 		Logger:     logger,

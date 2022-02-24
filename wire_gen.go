@@ -10,7 +10,6 @@ import (
 	"github.com/devtron-labs/lens/api"
 	"github.com/devtron-labs/lens/client"
 	"github.com/devtron-labs/lens/client/gitSensor"
-	"github.com/devtron-labs/lens/internal"
 	"github.com/devtron-labs/lens/internal/logger"
 	"github.com/devtron-labs/lens/internal/sql"
 	"github.com/devtron-labs/lens/pkg"
@@ -43,7 +42,7 @@ func InitializeApp() (*App, error) {
 	ingestionServiceImpl := pkg.NewIngestionServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl, gitSensorClientImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, deploymentMetricServiceImpl, ingestionServiceImpl)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
-	pubSubClient, err := internal.NewPubSubClient(sugaredLogger)
+	pubSubClient, err := client.NewPubSubClient(sugaredLogger)
 	if err != nil {
 		return nil, err
 	}
@@ -51,6 +50,6 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	app := NewApp(muxRouter, sugaredLogger, db, ingestionServiceImpl, natsSubscriptionImpl)
+	app := NewApp(muxRouter, sugaredLogger, db, ingestionServiceImpl, natsSubscriptionImpl, pubSubClient)
 	return app, nil
 }
