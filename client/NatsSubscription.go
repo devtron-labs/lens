@@ -46,6 +46,6 @@ func (impl NatsSubscriptionImpl) Subscribe() error {
 			return
 		}
 		impl.logger.Infow("app release saved ", "apprelease", release)
-	}, nats.Durable(POLL_CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(""))
+	}, nats.Durable(POLL_CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(ORCHESTRATOR_STREAM))
 	return err
 }
