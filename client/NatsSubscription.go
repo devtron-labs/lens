@@ -25,12 +25,16 @@ func NewNatsSubscription(pubSubClient *PubSubClient,
 		logger:           logger,
 		ingestionService: ingestionService,
 	}
+	err := AddStream(ns.pubSubClient.JetStrCtxt, ORCHESTRATOR_STREAM)
+
+	if err != nil {
+		ns.logger.Errorw("Error while adding stream", "error", err)
+	}
 	return ns, ns.Subscribe()
 }
 
-//TODO : adhiran : Work with Nishant to see how we can bind to a specific stream
 func (impl NatsSubscriptionImpl) Subscribe() error {
-	_, err := impl.pubSubClient.JetStrCtxt.QueueSubscribe(POLL_CD_SUCCESS, POLL_CD_SUCCESS_GRP, func(msg *nats.Msg) {
+	_, err := impl.pubSubClient.JetStrCtxt.QueueSubscribe(CD_SUCCESS, CD_SUCCESS_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		defer msg.Ack()
 		deploymentEvent := &pkg.DeploymentEvent{}
@@ -46,6 +50,6 @@ func (impl NatsSubscriptionImpl) Subscribe() error {
 			return
 		}
 		impl.logger.Infow("app release saved ", "apprelease", release)
-	}, nats.Durable(POLL_CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(ORCHESTRATOR_STREAM))
+	}, nats.Durable(CD_SUCCESS_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(ORCHESTRATOR_STREAM))
 	return err
 }

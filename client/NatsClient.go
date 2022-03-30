@@ -8,13 +8,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	POLL_CD_SUCCESS         = "ORCHESTRATOR.CD.TRIGGER"
-	POLL_CD_SUCCESS_GRP     = "ORCHESTRATOR.CD.TRIGGER_GRP1"
-	POLL_CD_SUCCESS_DURABLE = "ORCHESTRATOR.CD.TRIGGER_DURABLE1"
-	ORCHESTRATOR_STREAM     = "ORCHESTRATOR"
-)
-
 type PubSubClient struct {
 	Logger     *zap.SugaredLogger
 	JetStrCtxt nats.JetStreamContext
