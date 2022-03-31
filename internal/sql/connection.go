@@ -49,9 +49,11 @@ func NewDbConnection(cfg *Config, logger *zap.SugaredLogger) (*pg.DB, error) {
 		ApplicationName: cfg.ApplicationName,
 	}
 	dbConnection := pg.Connect(&options)
+
+	defer dbConnection.Close()
 	//check db connection
 	var test string
-	_, err := dbConnection.QueryOne(&test, `SELECT 1`)
+	_, err := dbConnection.QueryOne(pg.Scan(&test), "SELECT 1")
 
 	if err != nil {
 		logger.Errorw("error in connecting db ", "db", cfg, "err", err)
