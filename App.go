@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
-	"github.com/devtron-labs/lens/api"
-	"github.com/devtron-labs/lens/client"
-	"github.com/devtron-labs/lens/pkg"
 	"fmt"
-	"github.com/go-pg/pg"
-	"go.uber.org/zap"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/devtron-labs/lens/api"
+	"github.com/devtron-labs/lens/client"
+	"github.com/devtron-labs/lens/pkg"
+	pg "github.com/go-pg/pg/v10"
+	"go.uber.org/zap"
 )
 
 type App struct {
@@ -20,16 +21,17 @@ type App struct {
 	server           *http.Server
 	db               *pg.DB
 	natsSubscription *client.NatsSubscriptionImpl
-	//nats             stan.Conn
+	pubSubClient     *client.PubSubClient
 }
 
-func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, IngestionService pkg.IngestionService, natsSubscription *client.NatsSubscriptionImpl) *App {
+func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, IngestionService pkg.IngestionService, natsSubscription *client.NatsSubscriptionImpl, pubSubClient *client.PubSubClient) *App {
 	return &App{
 		MuxRouter:        MuxRouter,
 		Logger:           Logger,
 		db:               db,
 		natsSubscription: natsSubscription,
 		IngestionService: IngestionService,
+		pubSubClient:     pubSubClient,
 	}
 }
 
@@ -41,7 +43,7 @@ func (app *App) Start() {
 	app.server = server
 	err := server.ListenAndServe()
 	if err != nil {
-		app.Logger.Errorw("error in startup", "err", err, )
+		app.Logger.Errorw("error in startup", "err", err)
 		os.Exit(2)
 	}
 }
@@ -49,23 +51,20 @@ func (app *App) Start() {
 func (app *App) Stop() {
 	app.Logger.Infow("lens shutdown initiating")
 	timeoutContext, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	app.Logger.Infow("stopping nats")
-	//nc := app.nats.NatsConn()
-	//err := app.nats.Close()
-	//if err != nil {
-	//	app.Logger.Errorw("error in closing stan", "err", err)
-	//}
-	//err = nc.Drain()
-	//if err != nil {
-	//	app.Logger.Errorw("error in draining nats", "err", err)
-	//}
-	//nc.Close()
 
 	app.Logger.Infow("closing router")
 	err := app.server.Shutdown(timeoutContext)
 	if err != nil {
 		app.Logger.Errorw("error in mux router shutdown", "err", err)
 	}
+
+	//Draining nats connection
+	err = app.pubSubClient.Conn.Drain()
+
+	if err != nil {
+		app.Logger.Errorw("Error while draining nats connection", "error", err)
+	}
+
 	app.Logger.Infow("closing db connection")
 	err = app.db.Close()
 	if err != nil {

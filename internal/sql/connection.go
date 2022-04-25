@@ -1,10 +1,12 @@
 package sql
 
 import (
+	"context"
+
 	"github.com/caarlos0/env"
-	"github.com/go-pg/pg"
+	"github.com/devtron-labs/lens/internal/logger"
+	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
-	"time"
 )
 
 type Config struct {
@@ -15,6 +17,21 @@ type Config struct {
 	Database        string `env:"PG_DATABASE" envDefault:"lens"`
 	ApplicationName string `env:"APP" envDefault:"lens"`
 	LogQuery        bool   `env:"PG_LOG_QUERY" envDefault:"true"`
+}
+
+func (d dbLogger) BeforeQuery(c context.Context, q *pg.QueryEvent) (context.Context, error) {
+	return c, nil
+}
+
+func (d dbLogger) AfterQuery(c context.Context, q *pg.QueryEvent) error {
+	query, err := q.FormattedQuery()
+	logger.NewSugardLogger().Debugw("Printing formatted query", "query", query)
+	return err
+}
+
+type dbLogger struct {
+	beforeQueryMethod func(context.Context, *pg.QueryEvent) (context.Context, error)
+	afterQueryMethod  func(context.Context, *pg.QueryEvent) error
 }
 
 func GetConfig() (*Config, error) {
@@ -32,9 +49,11 @@ func NewDbConnection(cfg *Config, logger *zap.SugaredLogger) (*pg.DB, error) {
 		ApplicationName: cfg.ApplicationName,
 	}
 	dbConnection := pg.Connect(&options)
+
+	defer dbConnection.Close()
 	//check db connection
 	var test string
-	_, err := dbConnection.QueryOne(&test, `SELECT 1`)
+	_, err := dbConnection.QueryOne(pg.Scan(&test), "SELECT 1")
 
 	if err != nil {
 		logger.Errorw("error in connecting db ", "db", cfg, "err", err)
@@ -42,22 +61,8 @@ func NewDbConnection(cfg *Config, logger *zap.SugaredLogger) (*pg.DB, error) {
 	} else {
 		logger.Infow("connected with db", "db", cfg)
 	}
-	//--------------
 	if cfg.LogQuery {
-		dbConnection.OnQueryProcessed(func(event *pg.QueryProcessedEvent) {
-			query, err := event.FormattedQuery()
-			if err != nil {
-				panic(err)
-			}
-			logger.Infow("query time",
-				"duration", time.Since(event.StartTime),
-				"query", query)
-		})
+		dbConnection.AddQueryHook(dbLogger{})
 	}
 	return dbConnection, err
 }
-
-//TODO: call it from somewhere
-/*func closeConnection() error {
-	return dbConnection.Close()
-}*/

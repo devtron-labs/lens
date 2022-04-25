@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/caarlos0/env"
-	"go.uber.org/zap"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"reflect"
 	"time"
+
+	"github.com/caarlos0/env"
+	"go.uber.org/zap"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 //-----------
@@ -42,7 +43,6 @@ type ReleaseChangesRequest struct {
 	NewCommit          string `json:"newCommit"`
 }
 type GitSensorClient interface {
-
 	GetReleaseChanges(request *ReleaseChangesRequest) (*GitChanges, error)
 }
 
@@ -138,8 +138,8 @@ func NewGitSensorSession(config *GitSensorConfig, logger *zap.SugaredLogger) (se
 	return &GitSensorClientImpl{httpClient: client, logger: logger, baseUrl: baseUrl}, nil
 }
 
-func (session GitSensorClientImpl) GetReleaseChanges(req *ReleaseChangesRequest) (changes *GitChanges,err error) {
-	changes=new(GitChanges)
+func (session GitSensorClientImpl) GetReleaseChanges(req *ReleaseChangesRequest) (changes *GitChanges, err error) {
+	changes = new(GitChanges)
 	request := &ClientRequest{ResponseBody: changes, Method: "POST", RequestBody: req, Path: "release/changes"}
 	_, _, err = session.doRequest(request)
 	return changes, err
