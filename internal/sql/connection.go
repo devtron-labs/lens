@@ -49,8 +49,6 @@ func NewDbConnection(cfg *Config, logger *zap.SugaredLogger) (*pg.DB, error) {
 		ApplicationName: cfg.ApplicationName,
 	}
 	dbConnection := pg.Connect(&options)
-
-	defer dbConnection.Close()
 	//check db connection
 	var test string
 	_, err := dbConnection.QueryOne(pg.Scan(&test), "SELECT 1")
