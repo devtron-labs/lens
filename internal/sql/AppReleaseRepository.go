@@ -10,21 +10,21 @@ import (
 )
 
 type AppRelease struct {
-	tableName             struct{}      `sql:"app_release"`
-	Id                    int           `sql:"id,pk"`
-	AppId                 int           `sql:"app_id,notnull"`                   //orchestrator appId
-	EnvironmentId         int           `sql:"environment_id,notnull"`           //orchestrator env id
-	CiArtifactId          int           `sql:"ci_artifact_id,notnull"`           //orchestrator ciAretefactId  used for identifying rollback (appId,environmentId, ciArtifactId)
-	ReleaseId             int           `sql:"release_id,notnull"`               // orchestrator release counter
-	PipelineOverrideId    int           `sql:"pipeline_override_id,notnull"`     //pipeline override id orchestrator
-	ChangeSizeLineAdded   int           `sql:"change_size_line_added,notnull"`   //total lines added in this release
-	ChangeSizeLineDeleted int           `sql:"change_size_line_deleted,notnull"` //total lines deleted during this release
-	TriggerTime           time.Time     `sql:"trigger_time,notnull"`             //deployment time
-	ReleaseType           ReleaseType   `sql:"release_type,notnull"`
-	ReleaseStatus         ReleaseStatus `sql:"release_status,notnull"`
-	ProcessStage          ProcessStage  `sql:"process_status,notnull"`
-	CreatedTime           time.Time     `sql:"created_time,notnull"`
-	UpdatedTime           time.Time     `sql:"updated_time,notnull"`
+	tableName             struct{}      `pg:"app_release"`
+	Id                    int           `pg:"id,pk"`
+	AppId                 int           `pg:"app_id,notnull"`                   //orchestrator appId
+	EnvironmentId         int           `pg:"environment_id,notnull"`           //orchestrator env id
+	CiArtifactId          int           `pg:"ci_artifact_id,notnull"`           //orchestrator ciAretefactId  used for identifying rollback (appId,environmentId, ciArtifactId)
+	ReleaseId             int           `pg:"release_id,notnull"`               // orchestrator release counter
+	PipelineOverrideId    int           `pg:"pipeline_override_id,notnull"`     //pipeline override id orchestrator
+	ChangeSizeLineAdded   int           `pg:"change_size_line_added,notnull"`   //total lines added in this release
+	ChangeSizeLineDeleted int           `pg:"change_size_line_deleted,notnull"` //total lines deleted during this release
+	TriggerTime           time.Time     `pg:"trigger_time,notnull"`             //deployment time
+	ReleaseType           ReleaseType   `pg:"release_type,notnull"`
+	ReleaseStatus         ReleaseStatus `pg:"release_status,notnull"`
+	ProcessStage          ProcessStage  `pg:"process_status,notnull"`
+	CreatedTime           time.Time     `pg:"created_time,notnull"`
+	UpdatedTime           time.Time     `pg:"updated_time,notnull"`
 	LeadTime              *LeadTime
 }
 

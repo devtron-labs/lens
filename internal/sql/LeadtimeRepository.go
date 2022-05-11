@@ -8,13 +8,13 @@ import (
 )
 
 type LeadTime struct {
-	tableName          struct{}      `sql:"lead_time"`
-	Id                 int           `sql:"id"`
-	AppReleaseId       int           `sql:"app_release_id"`
-	PipelineMaterialId int           `sql:"pipeline_material_id"`
-	CommitHash         string        `sql:"commit_hash"`
-	CommitTime         time.Time     `sql:"commit_time"`
-	LeadTime           time.Duration `sql:"lead_time"`
+	tableName          struct{}      `pg:"lead_time"`
+	Id                 int           `pg:"id"`
+	AppReleaseId       int           `pg:"app_release_id"`
+	PipelineMaterialId int           `pg:"pipeline_material_id"`
+	CommitHash         string        `pg:"commit_hash"`
+	CommitTime         time.Time     `pg:"commit_time"`
+	LeadTime           time.Duration `pg:"lead_time"`
 	AppRelease         *AppRelease
 }
 
