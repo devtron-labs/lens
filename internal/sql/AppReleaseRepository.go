@@ -12,17 +12,17 @@ import (
 type AppRelease struct {
 	tableName             struct{}      `pg:"app_release"`
 	Id                    int           `pg:"id,pk"`
-	AppId                 int           `pg:"app_id,notnull"`                   //orchestrator appId
-	EnvironmentId         int           `pg:"environment_id,notnull"`           //orchestrator env id
-	CiArtifactId          int           `pg:"ci_artifact_id,notnull"`           //orchestrator ciAretefactId  used for identifying rollback (appId,environmentId, ciArtifactId)
-	ReleaseId             int           `pg:"release_id,notnull"`               // orchestrator release counter
-	PipelineOverrideId    int           `pg:"pipeline_override_id,notnull"`     //pipeline override id orchestrator
-	ChangeSizeLineAdded   int           `pg:"change_size_line_added,notnull"`   //total lines added in this release
-	ChangeSizeLineDeleted int           `pg:"change_size_line_deleted,notnull"` //total lines deleted during this release
-	TriggerTime           time.Time     `pg:"trigger_time,notnull"`             //deployment time
-	ReleaseType           ReleaseType   `pg:"release_type,notnull"`
-	ReleaseStatus         ReleaseStatus `pg:"release_status,notnull"`
-	ProcessStage          ProcessStage  `pg:"process_status,notnull"`
+	AppId                 int           `pg:"app_id,notnull,use_zero"`                   //orchestrator appId
+	EnvironmentId         int           `pg:"environment_id,notnull,use_zero"`           //orchestrator env id
+	CiArtifactId          int           `pg:"ci_artifact_id,notnull,use_zero"`           //orchestrator ciAretefactId  used for identifying rollback (appId,environmentId, ciArtifactId)
+	ReleaseId             int           `pg:"release_id,notnull,use_zero"`               // orchestrator release counter
+	PipelineOverrideId    int           `pg:"pipeline_override_id,notnull,use_zero"`     //pipeline override id orchestrator
+	ChangeSizeLineAdded   int           `pg:"change_size_line_added,notnull,use_zero"`   //total lines added in this release
+	ChangeSizeLineDeleted int           `pg:"change_size_line_deleted,notnull,use_zero"` //total lines deleted during this release
+	TriggerTime           time.Time     `pg:"trigger_time,notnull"`                      //deployment time
+	ReleaseType           ReleaseType   `pg:"release_type,notnull,use_zero"`
+	ReleaseStatus         ReleaseStatus `pg:"release_status,notnull,use_zero"`
+	ProcessStage          ProcessStage  `pg:"process_status,notnull,use_zero"`
 	CreatedTime           time.Time     `pg:"created_time,notnull"`
 	UpdatedTime           time.Time     `pg:"updated_time,notnull"`
 	LeadTime              *LeadTime
