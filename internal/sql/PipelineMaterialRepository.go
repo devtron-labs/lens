@@ -6,10 +6,10 @@ import (
 )
 
 type PipelineMaterial struct {
-	tableName          struct{} `sql:"pipeline_material"`
-	PipelineMaterialId int      `sql:"pipeline_material_id"`
-	CommitHash         string   `sql:"commit_hash"`
-	AppReleaseId       int      `sql:"app_release_id"`
+	tableName          struct{} `pg:"pipeline_material"`
+	PipelineMaterialId int      `pg:"pipeline_material_id"`
+	CommitHash         string   `pg:"commit_hash"`
+	AppReleaseId       int      `pg:"app_release_id"`
 	AppRelease         *AppRelease
 }
 type PipelineMaterialRepository interface {
