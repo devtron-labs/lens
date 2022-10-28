@@ -4,6 +4,7 @@
 package main
 
 import (
+	pubsub "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/lens/api"
 	"github.com/devtron-labs/lens/client"
 	"github.com/devtron-labs/lens/client/gitSensor"
@@ -35,7 +36,7 @@ func InitializeApp() (*App, error) {
 		gitSensor.GetGitSensorConfig,
 		gitSensor.NewGitSensorSession,
 		wire.Bind(new(gitSensor.GitSensorClient), new(*gitSensor.GitSensorClientImpl)),
-		client.NewPubSubClient,
+		pubsub.NewPubSubClientServiceImpl,
 		client.NewNatsSubscription,
 	)
 	return &App{}, nil
