@@ -7,7 +7,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/wire v0.5.0
 	github.com/gorilla/mux v1.8.0
-	github.com/nats-io/nats.go v1.15.0
+	github.com/nats-io/nats.go v1.19.0
 	go.uber.org/zap v1.21.0
 	gopkg.in/src-d/go-git.v4 v4.13.1
 )
@@ -42,7 +42,7 @@ require (
 )
 
 require (
-	github.com/devtron-labs/common-lib v0.0.0-20221028123910-ac349a64526a
+	github.com/devtron-labs/common-lib v0.0.0-20221111092855-6dae5a34a041
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 )
