@@ -42,7 +42,7 @@ require (
 )
 
 require (
-	github.com/devtron-labs/common-lib v0.0.0-20221111092855-6dae5a34a041
+	github.com/devtron-labs/common-lib v0.0.0-20221111102018-8cffc22d80e3
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 )
