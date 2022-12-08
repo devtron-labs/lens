@@ -1,7 +1,7 @@
 # github.com/caarlos0/env v3.5.0+incompatible
 ## explicit
 github.com/caarlos0/env
-# github.com/devtron-labs/common-lib v0.0.0-20221130123535-dff66e51a956
+# github.com/devtron-labs/common-lib v0.0.0-20221208044859-269008fed09b
 ## explicit; go 1.18
 github.com/devtron-labs/common-lib/pubsub-lib
 github.com/devtron-labs/common-lib/utils
