@@ -116,6 +116,8 @@ github.com/devtron-labs/common-lib v0.0.0-20221130123535-dff66e51a956 h1:Zu01gsC
 github.com/devtron-labs/common-lib v0.0.0-20221130123535-dff66e51a956/go.mod h1:R24nOqgk4buk9zv+BXzORfObZsOe3NE9P55KrZXGX9k=
 github.com/devtron-labs/common-lib v0.0.0-20221208044859-269008fed09b h1:yGXerrqwyjPIr62q1RadJh6MYH3vG6T9nChH+yOJnnA=
 github.com/devtron-labs/common-lib v0.0.0-20221208044859-269008fed09b/go.mod h1:R24nOqgk4buk9zv+BXzORfObZsOe3NE9P55KrZXGX9k=
+github.com/devtron-labs/common-lib v0.0.0-20221226122002-9dbeb177a7ef h1:Ni2j6uiaSUbwEwYQgHl7EOfT03ez/xWuSpkSQgB4K/Y=
+github.com/devtron-labs/common-lib v0.0.0-20221226122002-9dbeb177a7ef/go.mod h1:R24nOqgk4buk9zv+BXzORfObZsOe3NE9P55KrZXGX9k=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/emirpasic/gods v1.12.0 h1:QAUIPSaCu4G+POclxeqb3F+WPpdKqFGlw36+yOzGlrg=
 github.com/emirpasic/gods v1.12.0/go.mod h1:YfzfFFoVP/catgzJb4IKIqXjX78Ha8FMSDh3ymbK86o=
