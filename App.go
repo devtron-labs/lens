@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	pubsub "github.com/devtron-labs/common-lib/pubsub-lib"
 	"net/http"
 	"os"
 	"time"
@@ -21,10 +22,10 @@ type App struct {
 	server           *http.Server
 	db               *pg.DB
 	natsSubscription *client.NatsSubscriptionImpl
-	pubSubClient     *client.PubSubClient
+	pubSubClient     *pubsub.PubSubClientServiceImpl
 }
 
-func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, IngestionService pkg.IngestionService, natsSubscription *client.NatsSubscriptionImpl, pubSubClient *client.PubSubClient) *App {
+func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, IngestionService pkg.IngestionService, natsSubscription *client.NatsSubscriptionImpl, pubSubClient *pubsub.PubSubClientServiceImpl) *App {
 	return &App{
 		MuxRouter:        MuxRouter,
 		Logger:           Logger,
@@ -59,8 +60,6 @@ func (app *App) Stop() {
 	}
 
 	//Draining nats connection
-	err = app.pubSubClient.Conn.Drain()
-
 	if err != nil {
 		app.Logger.Errorw("Error while draining nats connection", "error", err)
 	}
