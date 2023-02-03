@@ -10,4 +10,7 @@ RUN GOOS=linux make
 FROM alpine:3.9
 RUN apk add --no-cache ca-certificates
 COPY --from=build-env  /go/src/github.com/devtron-labs/lens/lens .
+RUN adduser -D devtron
+RUN chown -R devtron:devtron ./lens
+USER devtron
 CMD ["./lens"]
