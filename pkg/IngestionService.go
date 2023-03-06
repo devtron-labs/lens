@@ -1,10 +1,12 @@
 package pkg
 
 import (
+	"context"
 	"time"
 
 	"github.com/devtron-labs/lens/client/gitSensor"
 	"github.com/devtron-labs/lens/internal/sql"
+	pb "github.com/devtron-labs/protos/git-sensor"
 	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
 )
@@ -18,20 +20,20 @@ type IngestionServiceImpl struct {
 	appReleaseRepository       sql.AppReleaseRepository
 	PipelineMaterialRepository sql.PipelineMaterialRepository
 	leadTimeRepository         sql.LeadTimeRepository
-	gitSensorClient            gitSensor.GitSensorClient
+	gitSensorGrpcClient        gitSensor.GitSensorGrpcClient
 }
 
 func NewIngestionServiceImpl(logger *zap.SugaredLogger,
 	appReleaseRepository sql.AppReleaseRepository,
 	PipelineMaterialRepository sql.PipelineMaterialRepository,
 	leadTimeRepository sql.LeadTimeRepository,
-	gitSensorClient gitSensor.GitSensorClient) *IngestionServiceImpl {
+	gitSensorGrpcClient gitSensor.GitSensorGrpcClient) *IngestionServiceImpl {
 	return &IngestionServiceImpl{
 		logger:                     logger,
 		appReleaseRepository:       appReleaseRepository,
 		PipelineMaterialRepository: PipelineMaterialRepository,
 		leadTimeRepository:         leadTimeRepository,
-		gitSensorClient:            gitSensorClient,
+		gitSensorGrpcClient:        gitSensorGrpcClient,
 	}
 }
 
@@ -146,29 +148,29 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 	lineRemoved := 0
 	oldestTime := time.Now()
 	now := oldestTime
-	var oldest *gitSensor.Commit
+	var oldest *pb.Commit
 	oldestId := 0
 	for _, pipelineMaterial := range materials {
 		oldHash, ok := oldMaterialCommitHash[pipelineMaterial.PipelineMaterialId]
 		if ok && oldHash != pipelineMaterial.CommitHash {
-			request := &gitSensor.ReleaseChangesRequest{
-				PipelineMaterialId: pipelineMaterial.PipelineMaterialId,
+			request := &pb.ReleaseChangeRequest{
+				PipelineMaterialId: int64(pipelineMaterial.PipelineMaterialId),
 				OldCommit:          oldHash,
 				NewCommit:          pipelineMaterial.CommitHash,
 			}
-			changes, err := impl.gitSensorClient.GetReleaseChanges(request)
+			changes, err := impl.gitSensorGrpcClient.GetChangesInRelease(context.Background(), request)
 			if err != nil {
 				impl.logger.Errorw("error in fetching git data", "err", err)
 				return err
 			}
 			for _, change := range changes.FileStats {
 				//change.Name	//TODO apply file filter
-				lineRemoved = lineRemoved + change.Deletion
-				lineAdded = lineAdded + change.Addition
+				lineRemoved = lineRemoved + int(change.Deletion)
+				lineAdded = lineAdded + int(change.Addition)
 			}
 			for _, d := range changes.Commits {
-				if oldestTime.After(d.Author.Date) {
-					oldestTime = d.Author.Date
+				if oldestTime.After(d.Author.Date.AsTime()) {
+					oldestTime = d.Author.Date.AsTime()
 					oldest = d
 					oldestId = pipelineMaterial.PipelineMaterialId
 				}
@@ -179,10 +181,10 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 
 		leadTime := &sql.LeadTime{
 			AppReleaseId:       appRelease.Id,
-			CommitTime:         oldest.Committer.Date,                          //
-			CommitHash:         oldest.Hash.Long,                               //
-			PipelineMaterialId: oldestId,                                       //
-			LeadTime:           appRelease.TriggerTime.Sub(oldest.Author.Date), //
+			CommitTime:         oldest.Committer.Date.AsTime(),                          //
+			CommitHash:         oldest.Hash.Long,                                        //
+			PipelineMaterialId: oldestId,                                                //
+			LeadTime:           appRelease.TriggerTime.Sub(oldest.Author.Date.AsTime()), //
 		}
 		_, err = impl.leadTimeRepository.Save(leadTime)
 		if err != nil {

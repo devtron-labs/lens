@@ -5,7 +5,7 @@ github.com/caarlos0/env
 ## explicit; go 1.18
 github.com/devtron-labs/common-lib/pubsub-lib
 github.com/devtron-labs/common-lib/utils
-# github.com/devtron-labs/protos v0.0.0-20230303111945-adc9e998b712 => ../protos
+# github.com/devtron-labs/protos v0.0.0-20230306074100-0c6d80ec3e05
 ## explicit; go 1.17
 github.com/devtron-labs/protos/git-sensor
 # github.com/emirpasic/gods v1.12.0
