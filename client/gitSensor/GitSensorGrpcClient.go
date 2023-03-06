@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"time"
 )
 
@@ -18,7 +19,7 @@ const (
 )
 
 type GitSensorGrpcClient interface {
-	GetChangesInRelease(ctx context.Context, req *pb.ReleaseChangeRequest) (*pb.GitChanges, error)
+	GetChangesInRelease(ctx context.Context, req *pb.ReleaseChangeRequest) (*GitChanges, error)
 }
 
 type GitSensorGrpcClientImpl struct {
@@ -76,7 +77,7 @@ func (client *GitSensorGrpcClientImpl) getConnection() (*grpc.ClientConn, error)
 }
 
 type GitSensorGrpcClientConfig struct {
-	Url string `env:"GIT_SENSOR_HOST" envDefault:"127.0.0.1:7070"`
+	Url string `env:"GIT_SENSOR_URL" envDefault:"127.0.0.1:7070"`
 }
 
 // GetConfig parses and returns GitSensor gRPC client configuration
@@ -87,11 +88,98 @@ func GetConfig() (*GitSensorGrpcClientConfig, error) {
 }
 
 func (client *GitSensorGrpcClientImpl) GetChangesInRelease(ctx context.Context, req *pb.ReleaseChangeRequest) (
-	*pb.GitChanges, error) {
+	*GitChanges, error) {
 
 	serviceClient, err := client.getGitSensorServiceClient()
 	if err != nil {
 		return nil, nil
 	}
-	return serviceClient.GetChangesInRelease(ctx, req)
+
+	res, err := serviceClient.GetChangesInRelease(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if res == nil {
+		return nil, nil
+	}
+
+	// map res
+	return client.mapGitChanges(res), nil
+}
+
+// mapGitChanges maps GitChanges from protobuf specified-type to golang struct type
+func (client *GitSensorGrpcClientImpl) mapGitChanges(gitChanges *pb.GitChanges) *GitChanges {
+	commits := make([]*Commit, 0)
+	for _, item := range gitChanges.Commits {
+
+		commit := &Commit{}
+
+		// Map Hash
+		if item.Hash != nil {
+			commit.Hash = &Hash{
+				Long:  item.Hash.Long,
+				Short: item.Hash.Short,
+			}
+		}
+
+		// Map Tree
+		if item.Tree != nil {
+			commit.Tree = &Tree{
+				Long:  item.Tree.Long,
+				Short: item.Tree.Short,
+			}
+		}
+
+		// Map Author
+		if item.Author != nil {
+			commit.Author = &Author{
+				Name:  item.Author.Name,
+				Email: item.Author.Email,
+			}
+			if item.Author.Date != nil {
+				commit.Author.Date = item.Author.Date.AsTime()
+			}
+		}
+
+		// Map Committer
+		if item.Committer != nil {
+			commit.Committer = &Committer{
+				Name:  item.Committer.Name,
+				Email: item.Committer.Email,
+			}
+			if item.Committer.Date != nil {
+				commit.Committer.Date = item.Committer.Date.AsTime()
+			}
+		}
+
+		// Map Tag
+		if item.Tag != nil {
+			commit.Tag = &Tag{
+				Name: item.Tag.Name,
+			}
+			if item.Tag.Date != nil {
+				commit.Tag.Date = item.Tag.Date.AsTime()
+			}
+		}
+
+		commit.Body = item.Body
+		commit.Subject = item.Subject
+		commits = append(commits, commit)
+	}
+
+	// Map FileStats
+	fileStats := make([]object.FileStat, 0)
+	for _, item := range gitChanges.FileStats {
+
+		fileStats = append(fileStats, object.FileStat{
+			Name:     item.Name,
+			Addition: int(item.Addition),
+			Deletion: int(item.Deletion),
+		})
+	}
+
+	return &GitChanges{
+		Commits:   commits,
+		FileStats: fileStats,
+	}
 }

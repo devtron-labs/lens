@@ -2,11 +2,13 @@ package pkg
 
 import (
 	"context"
+	"github.com/caarlos0/env"
+	"github.com/devtron-labs/lens/bean"
+	pb "github.com/devtron-labs/protos/git-sensor"
 	"time"
 
 	"github.com/devtron-labs/lens/client/gitSensor"
 	"github.com/devtron-labs/lens/internal/sql"
-	pb "github.com/devtron-labs/protos/git-sensor"
 	pg "github.com/go-pg/pg/v10"
 	"go.uber.org/zap"
 )
@@ -20,21 +22,35 @@ type IngestionServiceImpl struct {
 	appReleaseRepository       sql.AppReleaseRepository
 	PipelineMaterialRepository sql.PipelineMaterialRepository
 	leadTimeRepository         sql.LeadTimeRepository
+	gitSensorRestClient        gitSensor.GitSensorClient
 	gitSensorGrpcClient        gitSensor.GitSensorGrpcClient
+	isGitSensorGrpcConfigured  bool
 }
 
 func NewIngestionServiceImpl(logger *zap.SugaredLogger,
 	appReleaseRepository sql.AppReleaseRepository,
 	PipelineMaterialRepository sql.PipelineMaterialRepository,
 	leadTimeRepository sql.LeadTimeRepository,
+	gitSensorRestClient gitSensor.GitSensorClient,
 	gitSensorGrpcClient gitSensor.GitSensorGrpcClient) *IngestionServiceImpl {
-	return &IngestionServiceImpl{
+
+	ingestionService := &IngestionServiceImpl{
 		logger:                     logger,
 		appReleaseRepository:       appReleaseRepository,
 		PipelineMaterialRepository: PipelineMaterialRepository,
 		leadTimeRepository:         leadTimeRepository,
+		gitSensorRestClient:        gitSensorRestClient,
 		gitSensorGrpcClient:        gitSensorGrpcClient,
 	}
+
+	gitSensorProtocolConfig := bean.GitSensorProtocolConfig{}
+	_ = env.Parse(&gitSensorProtocolConfig)
+	if gitSensorProtocolConfig.Protocol == "GRPC" {
+		ingestionService.isGitSensorGrpcConfigured = true
+		logger.Infow("gRPC protocol configured for git sensor")
+	}
+
+	return ingestionService
 }
 
 type DeploymentEvent struct {
@@ -143,34 +159,50 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 		oldMaterialCommitHash[pipelineMaterial.PipelineMaterialId] = pipelineMaterial.CommitHash
 	}
 
-	//fetch data from git sensor
 	lineAdded := 0
 	lineRemoved := 0
 	oldestTime := time.Now()
 	now := oldestTime
-	var oldest *pb.Commit
 	oldestId := 0
+	var oldest *gitSensor.Commit
+
 	for _, pipelineMaterial := range materials {
 		oldHash, ok := oldMaterialCommitHash[pipelineMaterial.PipelineMaterialId]
 		if ok && oldHash != pipelineMaterial.CommitHash {
-			request := &pb.ReleaseChangeRequest{
-				PipelineMaterialId: int64(pipelineMaterial.PipelineMaterialId),
-				OldCommit:          oldHash,
-				NewCommit:          pipelineMaterial.CommitHash,
+
+			var changes *gitSensor.GitChanges
+
+			if impl.isGitSensorGrpcConfigured {
+				// gRPC protocol is configured, use gRPC client
+
+				request := &pb.ReleaseChangeRequest{
+					PipelineMaterialId: int64(pipelineMaterial.PipelineMaterialId),
+					OldCommit:          oldHash,
+					NewCommit:          pipelineMaterial.CommitHash,
+				}
+				changes, err = impl.gitSensorGrpcClient.GetChangesInRelease(context.Background(), request)
+
+			} else {
+				request := &gitSensor.ReleaseChangesRequest{
+					PipelineMaterialId: pipelineMaterial.PipelineMaterialId,
+					OldCommit:          oldHash,
+					NewCommit:          pipelineMaterial.CommitHash,
+				}
+				changes, err = impl.gitSensorRestClient.GetReleaseChanges(request)
 			}
-			changes, err := impl.gitSensorGrpcClient.GetChangesInRelease(context.Background(), request)
+
 			if err != nil {
 				impl.logger.Errorw("error in fetching git data", "err", err)
 				return err
 			}
 			for _, change := range changes.FileStats {
 				//change.Name	//TODO apply file filter
-				lineRemoved = lineRemoved + int(change.Deletion)
-				lineAdded = lineAdded + int(change.Addition)
+				lineRemoved = lineRemoved + change.Deletion
+				lineAdded = lineAdded + change.Addition
 			}
 			for _, d := range changes.Commits {
-				if oldestTime.After(d.Author.Date.AsTime()) {
-					oldestTime = d.Author.Date.AsTime()
+				if oldestTime.After(d.Author.Date) {
+					oldestTime = d.Author.Date
 					oldest = d
 					oldestId = pipelineMaterial.PipelineMaterialId
 				}
@@ -181,10 +213,10 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 
 		leadTime := &sql.LeadTime{
 			AppReleaseId:       appRelease.Id,
-			CommitTime:         oldest.Committer.Date.AsTime(),                          //
-			CommitHash:         oldest.Hash.Long,                                        //
-			PipelineMaterialId: oldestId,                                                //
-			LeadTime:           appRelease.TriggerTime.Sub(oldest.Author.Date.AsTime()), //
+			CommitTime:         oldest.Committer.Date,                          //
+			CommitHash:         oldest.Hash.Long,                               //
+			PipelineMaterialId: oldestId,                                       //
+			LeadTime:           appRelease.TriggerTime.Sub(oldest.Author.Date), //
 		}
 		_, err = impl.leadTimeRepository.Save(leadTime)
 		if err != nil {

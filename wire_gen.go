@@ -32,12 +32,20 @@ func InitializeApp() (*App, error) {
 	pipelineMaterialRepositoryImpl := sql.NewPipelineMaterialRepositoryImpl(db, sugaredLogger)
 	appReleaseRepositoryImpl := sql.NewAppReleaseRepositoryImpl(db, sugaredLogger, leadTimeRepositoryImpl, pipelineMaterialRepositoryImpl)
 	deploymentMetricServiceImpl := pkg.NewDeploymentMetricServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl)
+	gitSensorConfig, err := gitSensor.GetGitSensorConfig()
+	if err != nil {
+		return nil, err
+	}
+	gitSensorClientImpl, err := gitSensor.NewGitSensorSession(gitSensorConfig, sugaredLogger)
+	if err != nil {
+		return nil, err
+	}
 	gitSensorGrpcClientConfig, err := gitSensor.GetConfig()
 	if err != nil {
 		return nil, err
 	}
 	gitSensorGrpcClientImpl := gitSensor.NewGitSensorGrpcClientImpl(sugaredLogger, gitSensorGrpcClientConfig)
-	ingestionServiceImpl := pkg.NewIngestionServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl, gitSensorGrpcClientImpl)
+	ingestionServiceImpl := pkg.NewIngestionServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl, gitSensorClientImpl, gitSensorGrpcClientImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, deploymentMetricServiceImpl, ingestionServiceImpl)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
 	pubSubClientServiceImpl := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
