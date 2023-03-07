@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/caarlos0/env"
 	"github.com/devtron-labs/lens/bean"
-	pb "github.com/devtron-labs/protos/git-sensor"
+	pb "github.com/devtron-labs/protos/gitSensor"
 	"time"
 
 	"github.com/devtron-labs/lens/client/gitSensor"

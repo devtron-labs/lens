@@ -24,6 +24,8 @@ github.com/devtron-labs/common-lib v0.0.0-20230109070754-ff4dca200a2c h1:jz7yPUl
 github.com/devtron-labs/common-lib v0.0.0-20230109070754-ff4dca200a2c/go.mod h1:R24nOqgk4buk9zv+BXzORfObZsOe3NE9P55KrZXGX9k=
 github.com/devtron-labs/protos v0.0.0-20230306074100-0c6d80ec3e05 h1:9yluVMTgBO3JAbC82Fn1B3rX8Atsg/CidV69iBON5XQ=
 github.com/devtron-labs/protos v0.0.0-20230306074100-0c6d80ec3e05/go.mod h1:l85jxWHlcSo910hdUfRycL40yGzC6glE93V1sVxVPto=
+github.com/devtron-labs/protos v0.0.0-20230307051313-ecb763b443a8 h1:B/mf/ojkLxUsLPnSzY8c5ffFbkU8RS11C1BbtB4jJd0=
+github.com/devtron-labs/protos v0.0.0-20230307051313-ecb763b443a8/go.mod h1:l85jxWHlcSo910hdUfRycL40yGzC6glE93V1sVxVPto=
 github.com/emirpasic/gods v1.12.0 h1:QAUIPSaCu4G+POclxeqb3F+WPpdKqFGlw36+yOzGlrg=
 github.com/emirpasic/gods v1.12.0/go.mod h1:YfzfFFoVP/catgzJb4IKIqXjX78Ha8FMSDh3ymbK86o=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
