@@ -15,7 +15,6 @@ import (
 
 const (
 	ContextTimeoutInSeconds = 10
-	MaxMsgSizeBytes         = 20 * 1024 * 1024
 )
 
 type GitSensorGrpcClient interface {
@@ -58,9 +57,6 @@ func (client *GitSensorGrpcClientImpl) getConnection() (*grpc.ClientConn, error)
 		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
 		grpc.WithBlock(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithDefaultCallOptions(
-			grpc.MaxCallRecvMsgSize(MaxMsgSizeBytes),
-		),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
 	)
 	endpoint := fmt.Sprintf("dns:///%s", client.config.Url)
@@ -109,7 +105,7 @@ func (client *GitSensorGrpcClientImpl) GetChangesInRelease(ctx context.Context, 
 
 // mapGitChanges maps GitChanges from protobuf specified-type to golang struct type
 func (client *GitSensorGrpcClientImpl) mapGitChanges(gitChanges *pb.GitChanges) *GitChanges {
-	commits := make([]*Commit, 0)
+	commits := make([]*Commit, 0, len(gitChanges.Commits))
 	for _, item := range gitChanges.Commits {
 
 		commit := &Commit{}
@@ -168,7 +164,7 @@ func (client *GitSensorGrpcClientImpl) mapGitChanges(gitChanges *pb.GitChanges) 
 	}
 
 	// Map FileStats
-	fileStats := make([]object.FileStat, 0)
+	fileStats := make([]object.FileStat, 0, len(gitChanges.FileStats))
 	for _, item := range gitChanges.FileStats {
 
 		fileStats = append(fileStats, object.FileStat{
