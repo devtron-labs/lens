@@ -105,73 +105,80 @@ func (client *GitSensorGrpcClientImpl) GetChangesInRelease(ctx context.Context, 
 
 // mapGitChanges maps GitChanges from protobuf specified-type to golang struct type
 func (client *GitSensorGrpcClientImpl) mapGitChanges(gitChanges *pb.GitChanges) *GitChanges {
-	commits := make([]*Commit, 0, len(gitChanges.Commits))
-	for _, item := range gitChanges.Commits {
 
-		commit := &Commit{}
+	var commits []*Commit
+	if gitChanges.Commits != nil {
+		commits = make([]*Commit, 0, len(gitChanges.Commits))
+		for _, item := range gitChanges.Commits {
 
-		// Map Hash
-		if item.Hash != nil {
-			commit.Hash = &Hash{
-				Long:  item.Hash.Long,
-				Short: item.Hash.Short,
+			commit := &Commit{}
+
+			// Map Hash
+			if item.Hash != nil {
+				commit.Hash = &Hash{
+					Long:  item.Hash.Long,
+					Short: item.Hash.Short,
+				}
 			}
+
+			// Map Tree
+			if item.Tree != nil {
+				commit.Tree = &Tree{
+					Long:  item.Tree.Long,
+					Short: item.Tree.Short,
+				}
+			}
+
+			// Map Author
+			if item.Author != nil {
+				commit.Author = &Author{
+					Name:  item.Author.Name,
+					Email: item.Author.Email,
+				}
+				if item.Author.Date != nil {
+					commit.Author.Date = item.Author.Date.AsTime()
+				}
+			}
+
+			// Map Committer
+			if item.Committer != nil {
+				commit.Committer = &Committer{
+					Name:  item.Committer.Name,
+					Email: item.Committer.Email,
+				}
+				if item.Committer.Date != nil {
+					commit.Committer.Date = item.Committer.Date.AsTime()
+				}
+			}
+
+			// Map Tag
+			if item.Tag != nil {
+				commit.Tag = &Tag{
+					Name: item.Tag.Name,
+				}
+				if item.Tag.Date != nil {
+					commit.Tag.Date = item.Tag.Date.AsTime()
+				}
+			}
+
+			commit.Body = item.Body
+			commit.Subject = item.Subject
+			commits = append(commits, commit)
 		}
-
-		// Map Tree
-		if item.Tree != nil {
-			commit.Tree = &Tree{
-				Long:  item.Tree.Long,
-				Short: item.Tree.Short,
-			}
-		}
-
-		// Map Author
-		if item.Author != nil {
-			commit.Author = &Author{
-				Name:  item.Author.Name,
-				Email: item.Author.Email,
-			}
-			if item.Author.Date != nil {
-				commit.Author.Date = item.Author.Date.AsTime()
-			}
-		}
-
-		// Map Committer
-		if item.Committer != nil {
-			commit.Committer = &Committer{
-				Name:  item.Committer.Name,
-				Email: item.Committer.Email,
-			}
-			if item.Committer.Date != nil {
-				commit.Committer.Date = item.Committer.Date.AsTime()
-			}
-		}
-
-		// Map Tag
-		if item.Tag != nil {
-			commit.Tag = &Tag{
-				Name: item.Tag.Name,
-			}
-			if item.Tag.Date != nil {
-				commit.Tag.Date = item.Tag.Date.AsTime()
-			}
-		}
-
-		commit.Body = item.Body
-		commit.Subject = item.Subject
-		commits = append(commits, commit)
 	}
 
 	// Map FileStats
-	fileStats := make([]object.FileStat, 0, len(gitChanges.FileStats))
-	for _, item := range gitChanges.FileStats {
+	var fileStats []object.FileStat
+	if gitChanges.FileStats != nil {
+		fileStats = make([]object.FileStat, 0, len(gitChanges.FileStats))
+		for _, item := range gitChanges.FileStats {
 
-		fileStats = append(fileStats, object.FileStat{
-			Name:     item.Name,
-			Addition: int(item.Addition),
-			Deletion: int(item.Deletion),
-		})
+			fileStats = append(fileStats, object.FileStat{
+				Name:     item.Name,
+				Addition: int(item.Addition),
+				Deletion: int(item.Deletion),
+			})
+		}
 	}
 
 	return &GitChanges{
