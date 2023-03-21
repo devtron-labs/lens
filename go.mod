@@ -7,7 +7,6 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/wire v0.5.0
 	github.com/gorilla/mux v1.8.0
-	github.com/nats-io/nats.go v1.19.0
 	go.uber.org/zap v1.21.0
 	gopkg.in/src-d/go-git.v4 v4.13.1
 )
@@ -20,6 +19,7 @@ require (
 	github.com/klauspost/compress v1.14.4 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
 	github.com/nats-io/jwt/v2 v2.2.1-0.20220330180145-442af02fd36a // indirect
+	github.com/nats-io/nats.go v1.19.0 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -38,7 +38,7 @@ require (
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	mellium.im/sasl v0.2.1 // indirect
+	mellium.im/sasl v0.3.1 // indirect
 )
 
 require (
