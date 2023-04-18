@@ -40,7 +40,12 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	ingestionServiceImpl := pkg.NewIngestionServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl, gitSensorClientImpl)
+	gitSensorGrpcClientConfig, err := gitSensor.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+	gitSensorGrpcClientImpl := gitSensor.NewGitSensorGrpcClientImpl(sugaredLogger, gitSensorGrpcClientConfig)
+	ingestionServiceImpl := pkg.NewIngestionServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl, gitSensorClientImpl, gitSensorGrpcClientImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, deploymentMetricServiceImpl, ingestionServiceImpl)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
 	pubSubClientServiceImpl := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)

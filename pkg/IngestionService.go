@@ -1,6 +1,10 @@
 package pkg
 
 import (
+	"context"
+	"github.com/caarlos0/env"
+	"github.com/devtron-labs/lens/bean"
+	pb "github.com/devtron-labs/protos/gitSensor"
 	"time"
 
 	"github.com/devtron-labs/lens/client/gitSensor"
@@ -18,21 +22,35 @@ type IngestionServiceImpl struct {
 	appReleaseRepository       sql.AppReleaseRepository
 	PipelineMaterialRepository sql.PipelineMaterialRepository
 	leadTimeRepository         sql.LeadTimeRepository
-	gitSensorClient            gitSensor.GitSensorClient
+	gitSensorRestClient        gitSensor.GitSensorClient
+	gitSensorGrpcClient        gitSensor.GitSensorGrpcClient
+	isGitSensorGrpcConfigured  bool
 }
 
 func NewIngestionServiceImpl(logger *zap.SugaredLogger,
 	appReleaseRepository sql.AppReleaseRepository,
 	PipelineMaterialRepository sql.PipelineMaterialRepository,
 	leadTimeRepository sql.LeadTimeRepository,
-	gitSensorClient gitSensor.GitSensorClient) *IngestionServiceImpl {
-	return &IngestionServiceImpl{
+	gitSensorRestClient gitSensor.GitSensorClient,
+	gitSensorGrpcClient gitSensor.GitSensorGrpcClient) *IngestionServiceImpl {
+
+	ingestionService := &IngestionServiceImpl{
 		logger:                     logger,
 		appReleaseRepository:       appReleaseRepository,
 		PipelineMaterialRepository: PipelineMaterialRepository,
 		leadTimeRepository:         leadTimeRepository,
-		gitSensorClient:            gitSensorClient,
+		gitSensorRestClient:        gitSensorRestClient,
+		gitSensorGrpcClient:        gitSensorGrpcClient,
 	}
+
+	gitSensorProtocolConfig := bean.GitSensorProtocolConfig{}
+	_ = env.Parse(&gitSensorProtocolConfig)
+	if gitSensorProtocolConfig.Protocol == "GRPC" {
+		ingestionService.isGitSensorGrpcConfigured = true
+		logger.Infow("gRPC protocol configured for git sensor")
+	}
+
+	return ingestionService
 }
 
 type DeploymentEvent struct {
@@ -141,22 +159,38 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 		oldMaterialCommitHash[pipelineMaterial.PipelineMaterialId] = pipelineMaterial.CommitHash
 	}
 
-	//fetch data from git sensor
 	lineAdded := 0
 	lineRemoved := 0
 	oldestTime := time.Now()
 	now := oldestTime
-	var oldest *gitSensor.Commit
 	oldestId := 0
+	var oldest *gitSensor.Commit
+
 	for _, pipelineMaterial := range materials {
 		oldHash, ok := oldMaterialCommitHash[pipelineMaterial.PipelineMaterialId]
 		if ok && oldHash != pipelineMaterial.CommitHash {
-			request := &gitSensor.ReleaseChangesRequest{
-				PipelineMaterialId: pipelineMaterial.PipelineMaterialId,
-				OldCommit:          oldHash,
-				NewCommit:          pipelineMaterial.CommitHash,
+
+			var changes *gitSensor.GitChanges
+
+			if impl.isGitSensorGrpcConfigured {
+				// gRPC protocol is configured, use gRPC client
+
+				request := &pb.ReleaseChangeRequest{
+					PipelineMaterialId: int64(pipelineMaterial.PipelineMaterialId),
+					OldCommit:          oldHash,
+					NewCommit:          pipelineMaterial.CommitHash,
+				}
+				changes, err = impl.gitSensorGrpcClient.GetChangesInRelease(context.Background(), request)
+
+			} else {
+				request := &gitSensor.ReleaseChangesRequest{
+					PipelineMaterialId: pipelineMaterial.PipelineMaterialId,
+					OldCommit:          oldHash,
+					NewCommit:          pipelineMaterial.CommitHash,
+				}
+				changes, err = impl.gitSensorRestClient.GetReleaseChanges(request)
 			}
-			changes, err := impl.gitSensorClient.GetReleaseChanges(request)
+
 			if err != nil {
 				impl.logger.Errorw("error in fetching git data", "err", err)
 				return err

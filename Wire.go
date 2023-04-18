@@ -36,6 +36,9 @@ func InitializeApp() (*App, error) {
 		gitSensor.GetGitSensorConfig,
 		gitSensor.NewGitSensorSession,
 		wire.Bind(new(gitSensor.GitSensorClient), new(*gitSensor.GitSensorClientImpl)),
+		gitSensor.GetConfig,
+		gitSensor.NewGitSensorGrpcClientImpl,
+		wire.Bind(new(gitSensor.GitSensorGrpcClient), new(*gitSensor.GitSensorGrpcClientImpl)),
 		pubsub.NewPubSubClientServiceImpl,
 		client.NewNatsSubscription,
 	)
