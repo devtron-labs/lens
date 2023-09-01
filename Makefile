@@ -19,7 +19,7 @@ wire:
 	wire
 
 clean:
-	rm -f lens
+	rm -rf lens
 
 run: build
 	./lens
