@@ -245,7 +245,8 @@ func anyToSockaddr(fd int, rsa *RawSockaddrAny) (Sockaddr, error) {
 				break
 			}
 		}
-		sa.Name = string(unsafe.Slice((*byte)(unsafe.Pointer(&pp.Path[0])), n))
+		bytes := (*[len(pp.Path)]byte)(unsafe.Pointer(&pp.Path[0]))[0:n]
+		sa.Name = string(bytes)
 		return sa, nil
 
 	case AF_INET:
@@ -600,6 +601,20 @@ func Poll(fds []PollFd, timeout int) (n int, err error) {
 //	Acct(name nil-string) (err error)
 //	Gethostuuid(uuid *byte, timeout *Timespec) (err error)
 //	Ptrace(req int, pid int, addr uintptr, data int) (ret uintptr, err error)
+
+var mapper = &mmapper{
+	active: make(map[*byte][]byte),
+	mmap:   mmap,
+	munmap: munmap,
+}
+
+func Mmap(fd int, offset int64, length int, prot int, flags int) (data []byte, err error) {
+	return mapper.Mmap(fd, offset, length, prot, flags)
+}
+
+func Munmap(b []byte) (err error) {
+	return mapper.Munmap(b)
+}
 
 //sys	Madvise(b []byte, behav int) (err error)
 //sys	Mlock(b []byte) (err error)

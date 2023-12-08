@@ -1,6 +1,6 @@
 // Copyright 2016 The Mellium Contributors.
-// Use of this source code is governed by the BSD 2-clause
-// license that can be found in the LICENSE file.
+// Use of this source code is governed by the BSD 2-clause license that can be
+// found in the LICENSE file.
 
 package sasl
 
@@ -44,17 +44,15 @@ const (
 func NewClient(m Mechanism, opts ...Option) *Negotiator {
 	machine := &Negotiator{
 		mechanism: m,
+		nonce:     nonce(noncerandlen, rand.Reader),
 	}
 	getOpts(machine, opts...)
 	for _, rname := range machine.remoteMechanisms {
 		lname := m.Name
 		if lname == rname && strings.HasSuffix(lname, "-PLUS") {
 			machine.state |= RemoteCB
-			break
+			return machine
 		}
-	}
-	if len(machine.nonce) == 0 {
-		machine.nonce = nonce(noncerandlen, rand.Reader)
 	}
 	return machine
 }
@@ -66,6 +64,7 @@ func NewClient(m Mechanism, opts ...Option) *Negotiator {
 func NewServer(m Mechanism, permissions func(*Negotiator) bool, opts ...Option) *Negotiator {
 	machine := &Negotiator{
 		mechanism: m,
+		nonce:     nonce(noncerandlen, rand.Reader),
 		state:     AuthTextSent | Receiving,
 	}
 	getOpts(machine, opts...)
@@ -76,11 +75,8 @@ func NewServer(m Mechanism, permissions func(*Negotiator) bool, opts ...Option) 
 		lname := m.Name
 		if lname == rname && strings.HasSuffix(lname, "-PLUS") {
 			machine.state |= RemoteCB
-			break
+			return machine
 		}
-	}
-	if len(machine.nonce) == 0 {
-		machine.nonce = nonce(noncerandlen, rand.Reader)
 	}
 	return machine
 }

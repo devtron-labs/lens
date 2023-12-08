@@ -1,3 +1,5 @@
+## The BSD 2-Clause License
+
 Copyright © 2014 The Mellium Contributors.
 All rights reserved.
 
