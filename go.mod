@@ -8,7 +8,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/wire v0.5.0
 	github.com/gorilla/mux v1.8.0
-	github.com/prometheus/client_golang v1.13.0
+	github.com/prometheus/client_golang v1.14.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.40.0
 	go.uber.org/zap v1.21.0
 	google.golang.org/grpc v1.54.0
@@ -59,7 +59,7 @@ require (
 )
 
 require (
-	github.com/devtron-labs/common-lib v0.0.9-0.20231220075013-7fcf9a7fd519
+	github.com/devtron-labs/common-lib v0.0.9-0.20231220132531-ea8f659a9848
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 )
