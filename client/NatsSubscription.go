@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	pubsub "github.com/devtron-labs/common-lib/pubsub-lib"
+	"github.com/devtron-labs/common-lib/pubsub-lib/model"
 	"github.com/devtron-labs/lens/pkg"
 	"go.uber.org/zap"
 )
@@ -24,9 +25,9 @@ func NewNatsSubscription(pubSubClient *pubsub.PubSubClientServiceImpl,
 		logger:           logger,
 		ingestionService: ingestionService,
 	}
-	callback := func(msg *pubsub.PubSubMsg) {
+	callback := func(msg *model.PubSubMsg) {
 		ns.logger.Debugw("received msg", "msg", msg)
-		//defer msg.Ack()
+		// defer msg.Ack()
 		deploymentEvent := &pkg.DeploymentEvent{}
 		err := json.Unmarshal([]byte(msg.Data), deploymentEvent)
 		if err != nil {
