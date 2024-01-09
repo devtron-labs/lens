@@ -5,10 +5,10 @@ package main
 
 import (
 	pubsub "github.com/devtron-labs/common-lib/pubsub-lib"
+	"github.com/devtron-labs/common-lib/utils"
 	"github.com/devtron-labs/lens/api"
 	"github.com/devtron-labs/lens/client"
 	"github.com/devtron-labs/lens/client/gitSensor"
-	"github.com/devtron-labs/lens/internal/logger"
 	"github.com/devtron-labs/lens/internal/sql"
 	"github.com/devtron-labs/lens/pkg"
 	"github.com/google/wire"
@@ -18,7 +18,8 @@ func InitializeApp() (*App, error) {
 	wire.Build(
 		NewApp,
 		api.NewMuxRouter,
-		logger.NewSugardLogger,
+		//logger.NewSugardLogger,
+		utils.NewSugardLogger,
 		sql.GetConfig,
 		sql.NewDbConnection,
 		api.NewRestHandlerImpl,

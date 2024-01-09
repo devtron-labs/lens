@@ -8,10 +8,10 @@ package main
 
 import (
 	"github.com/devtron-labs/common-lib/pubsub-lib"
+	"github.com/devtron-labs/common-lib/utils"
 	"github.com/devtron-labs/lens/api"
 	"github.com/devtron-labs/lens/client"
 	"github.com/devtron-labs/lens/client/gitSensor"
-	"github.com/devtron-labs/lens/internal/logger"
 	"github.com/devtron-labs/lens/internal/sql"
 	"github.com/devtron-labs/lens/pkg"
 )
@@ -19,7 +19,10 @@ import (
 // Injectors from Wire.go:
 
 func InitializeApp() (*App, error) {
-	sugaredLogger := logger.NewSugardLogger()
+	sugaredLogger, err := utils.NewSugardLogger()
+	if err != nil {
+		return nil, err
+	}
 	config, err := sql.GetConfig()
 	if err != nil {
 		return nil, err
