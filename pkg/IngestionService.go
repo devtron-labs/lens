@@ -195,6 +195,7 @@ func (impl *IngestionServiceImpl) fetchAndSaveChangesFromGit(appRelease *sql.App
 				impl.logger.Errorw("error in fetching git data", "err", err)
 				return err
 			}
+			impl.logger.Debugw("git changes", "old", oldHash, "new", pipelineMaterial.CommitHash, "material", pipelineMaterial.PipelineMaterialId, "changes", changes)
 			for _, change := range changes.FileStats {
 				//change.Name	//TODO apply file filter
 				lineRemoved = lineRemoved + change.Deletion
