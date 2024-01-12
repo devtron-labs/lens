@@ -76,24 +76,29 @@ func (impl *IngestionServiceImpl) ProcessDeploymentEvent(deploymentEvent *Deploy
 	impl.logger.Infow("processing release trigger", "request", deploymentEvent)
 	appRelease, err := impl.saveAppRelease(deploymentEvent)
 	if err != nil {
+		impl.logger.Error(err)
 		return nil, err
 	}
 	materials, err := impl.savePipelineMaterial(deploymentEvent, appRelease)
 	if err != nil {
+		impl.logger.Error(err)
 		return nil, err
 	}
 	//--------
 	appRelease, err = impl.checkAndUpdateReleaseType(appRelease)
 	if err != nil {
+		impl.logger.Error(err)
 		return nil, err
 	}
 	if appRelease.ReleaseType == sql.RollBack {
 		//no need to fetch git detail return
+		impl.logger.Warn("rollback")
 		return appRelease, nil //FIXME
 	}
 	//mark previous pipeline fail
 	err = impl.markPreviousTriggerFail(appRelease)
 	if err != nil && err != pg.ErrNoRows {
+		impl.logger.Error(err)
 		return nil, err
 	}
 
