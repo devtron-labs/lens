@@ -13,61 +13,16 @@ import (
 
 	"github.com/caarlos0/env"
 	"go.uber.org/zap"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
-//-----------
-type GitSensorResponse struct {
-	Code   int                  `json:"code,omitempty"`
-	Status string               `json:"status,omitempty"`
-	Result json.RawMessage      `json:"result,omitempty"`
-	Errors []*GitSensorApiError `json:"errors,omitempty"`
-}
-type GitSensorApiError struct {
-	HttpStatusCode    int    `json:"-"`
-	Code              string `json:"code,omitempty"`
-	InternalMessage   string `json:"internalMessage,omitempty"`
-	UserMessage       string `json:"userMessage,omitempty"`
-	UserDetailMessage string `json:"userDetailMessage,omitempty"`
-}
-
-//---------------
-
-type GitChanges struct {
-	Commits   []*Commit
-	FileStats object.FileStats
-}
-type ReleaseChangesRequest struct {
-	PipelineMaterialId int    `json:"pipelineMaterialId"`
-	OldCommit          string `json:"oldCommit"`
-	NewCommit          string `json:"newCommit"`
-}
 type GitSensorClient interface {
 	GetReleaseChanges(request *ReleaseChangesRequest) (*GitChanges, error)
-}
-
-//----------------------impl
-type GitSensorConfig struct {
-	Url     string `env:"GIT_SENSOR_URL" envDefault:"http://localhost:9999"`
-	Timeout int    `env:"GIT_SENSOR_TIMEOUT" envDefault:"0"` // in seconds
 }
 
 type GitSensorClientImpl struct {
 	httpClient *http.Client
 	logger     *zap.SugaredLogger
 	baseUrl    *url.URL
-}
-type StatusCode int
-
-func (code StatusCode) IsSuccess() bool {
-	return code >= 200 && code <= 299
-}
-
-type ClientRequest struct {
-	Method       string
-	Path         string
-	RequestBody  interface{}
-	ResponseBody interface{}
 }
 
 func GetGitSensorConfig() (*GitSensorConfig, error) {

@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 	"time"
 )
 
@@ -168,12 +167,12 @@ func (client *GitSensorGrpcClientImpl) mapGitChanges(gitChanges *pb.GitChanges) 
 	}
 
 	// Map FileStats
-	var fileStats []object.FileStat
+	var fileStats []FileStat
 	if gitChanges.FileStats != nil {
-		fileStats = make([]object.FileStat, 0, len(gitChanges.FileStats))
+		fileStats = make([]FileStat, 0, len(gitChanges.FileStats))
 		for _, item := range gitChanges.FileStats {
 
-			fileStats = append(fileStats, object.FileStat{
+			fileStats = append(fileStats, FileStat{
 				Name:     item.Name,
 				Addition: int(item.Addition),
 				Deletion: int(item.Deletion),
