@@ -22,8 +22,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/devtron-labs/common-lib v0.0.9-0.20231226070212-c47f7a07ebf5 h1:+Nh2SMzAdgBr1tgdKAlF5cN0CvTPUj1V/sI5aRUrZnE=
 github.com/devtron-labs/common-lib v0.0.9-0.20231226070212-c47f7a07ebf5/go.mod h1:pBThgympEjsza6GShqNNGCPBFXNDx0DGMc7ID/VHTAw=
-github.com/devtron-labs/protos v0.0.0-20230307051313-ecb763b443a8 h1:B/mf/ojkLxUsLPnSzY8c5ffFbkU8RS11C1BbtB4jJd0=
-github.com/devtron-labs/protos v0.0.0-20230307051313-ecb763b443a8/go.mod h1:l85jxWHlcSo910hdUfRycL40yGzC6glE93V1sVxVPto=
+github.com/devtron-labs/protos v0.0.3-0.20240130061723-7b2e12ab0abb h1:CkfQQgZc950/hTPqtQSiHV2RmZgkBLGCzwR02FZYjAU=
+github.com/devtron-labs/protos v0.0.3-0.20240130061723-7b2e12ab0abb/go.mod h1:pjLjgoa1GzbkOkvbMyP4SAKsaiK7eG6GoQCNauG03JA=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/envoyproxy/protoc-gen-validate v1.0.2 h1:QkIBuU5k+x7/QXPvPPnWXWlCdaBFApVqftFV6k087DA=

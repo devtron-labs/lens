@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
-	github.com/devtron-labs/protos v0.0.0-20230307051313-ecb763b443a8
+	github.com/devtron-labs/protos v0.0.3-0.20240130061723-7b2e12ab0abb
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/wire v0.5.0
 	github.com/gorilla/mux v1.8.0
