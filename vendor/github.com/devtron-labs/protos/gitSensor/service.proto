@@ -32,6 +32,7 @@ message GitMaterial {
   bool checkoutStatus = 7;
   string checkoutMsgAny = 8;
   bool deleted = 9;
+  repeated string filterPattern = 10;
 }
 
 message SavePipelineMaterialRequest {
@@ -46,10 +47,11 @@ message CiPipelineMaterial {
   bool active = 5;
   string lastSeenHash = 6;
   string commitAuthor = 7;
-  google.protobuf.Timestamp commitDate = 8;
-  string commitHistory = 9;
-  bool errored = 10;
-  string errorMsg = 11;
+  string commitMessage = 8;
+  google.protobuf.Timestamp commitDate = 9;
+  string commitHistory = 10;
+  bool errored = 11;
+  string errorMsg = 12;
 }
 
 message FetchScmChangesRequest {
@@ -57,6 +59,7 @@ message FetchScmChangesRequest {
   string from = 2;
   string to = 3;
   int64 count = 4;
+  bool showAll = 5;
 }
 
 message MaterialChangeResponse {
@@ -76,6 +79,7 @@ message GitCommit {
   repeated string Changes = 5;
   repeated FileStat FileStats = 6;
   WebhookData WebhookData = 7;
+  bool Excluded = 8;
 }
 
 message FileStat {

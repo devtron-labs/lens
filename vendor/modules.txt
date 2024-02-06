@@ -13,17 +13,9 @@ github.com/devtron-labs/common-lib/pubsub-lib
 github.com/devtron-labs/common-lib/pubsub-lib/metrics
 github.com/devtron-labs/common-lib/pubsub-lib/model
 github.com/devtron-labs/common-lib/utils
-# github.com/devtron-labs/protos v0.0.0-20230307051313-ecb763b443a8
+# github.com/devtron-labs/protos v0.0.3-0.20240130061723-7b2e12ab0abb
 ## explicit; go 1.17
 github.com/devtron-labs/protos/gitSensor
-# github.com/emirpasic/gods v1.12.0
-## explicit
-github.com/emirpasic/gods/containers
-github.com/emirpasic/gods/lists
-github.com/emirpasic/gods/lists/arraylist
-github.com/emirpasic/gods/trees
-github.com/emirpasic/gods/trees/binaryheap
-github.com/emirpasic/gods/utils
 # github.com/go-logr/logr v1.3.0
 ## explicit; go 1.18
 github.com/go-logr/logr
@@ -57,9 +49,6 @@ github.com/google/wire
 # github.com/gorilla/mux v1.8.0
 ## explicit; go 1.12
 github.com/gorilla/mux
-# github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
-## explicit
-github.com/jbenet/go-context/io
 # github.com/jinzhu/inflection v1.0.0
 ## explicit
 github.com/jinzhu/inflection
@@ -109,15 +98,6 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
-# github.com/sergi/go-diff v1.0.0
-## explicit
-github.com/sergi/go-diff/diffmatchpatch
-# github.com/src-d/gcfg v1.4.0
-## explicit
-github.com/src-d/gcfg
-github.com/src-d/gcfg/scanner
-github.com/src-d/gcfg/token
-github.com/src-d/gcfg/types
 # github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc
 ## explicit
 github.com/tmthrgd/go-hex
@@ -179,7 +159,6 @@ go.uber.org/zap/zapcore
 # golang.org/x/crypto v0.17.0
 ## explicit; go 1.18
 golang.org/x/crypto/blake2b
-golang.org/x/crypto/cast5
 golang.org/x/crypto/curve25519
 golang.org/x/crypto/curve25519/internal/field
 golang.org/x/crypto/ed25519
@@ -187,17 +166,10 @@ golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/nacl/box
 golang.org/x/crypto/nacl/secretbox
-golang.org/x/crypto/openpgp
-golang.org/x/crypto/openpgp/armor
-golang.org/x/crypto/openpgp/elgamal
-golang.org/x/crypto/openpgp/errors
-golang.org/x/crypto/openpgp/packet
-golang.org/x/crypto/openpgp/s2k
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/salsa20/salsa
 # golang.org/x/net v0.17.0
 ## explicit; go 1.17
-golang.org/x/net/context
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
@@ -303,27 +275,6 @@ google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# gopkg.in/src-d/go-git.v4 v4.13.1
-## explicit
-gopkg.in/src-d/go-git.v4/config
-gopkg.in/src-d/go-git.v4/internal/url
-gopkg.in/src-d/go-git.v4/plumbing
-gopkg.in/src-d/go-git.v4/plumbing/filemode
-gopkg.in/src-d/go-git.v4/plumbing/format/config
-gopkg.in/src-d/go-git.v4/plumbing/format/diff
-gopkg.in/src-d/go-git.v4/plumbing/format/index
-gopkg.in/src-d/go-git.v4/plumbing/object
-gopkg.in/src-d/go-git.v4/plumbing/storer
-gopkg.in/src-d/go-git.v4/storage
-gopkg.in/src-d/go-git.v4/utils/binary
-gopkg.in/src-d/go-git.v4/utils/diff
-gopkg.in/src-d/go-git.v4/utils/ioutil
-gopkg.in/src-d/go-git.v4/utils/merkletrie
-gopkg.in/src-d/go-git.v4/utils/merkletrie/internal/frame
-gopkg.in/src-d/go-git.v4/utils/merkletrie/noder
-# gopkg.in/warnings.v0 v0.1.2
-## explicit
-gopkg.in/warnings.v0
 # mellium.im/sasl v0.3.1
 ## explicit; go 1.18
 mellium.im/sasl
