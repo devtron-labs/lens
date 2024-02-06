@@ -35,22 +35,3 @@ type ReleaseChangesRequest struct {
 	OldCommit          string `json:"oldCommit"`
 	NewCommit          string `json:"newCommit"`
 }
-
-// ----------------------impl
-type GitSensorConfig struct {
-	Url     string `env:"GIT_SENSOR_URL" envDefault:"http://localhost:9999"`
-	Timeout int    `env:"GIT_SENSOR_TIMEOUT" envDefault:"0"` // in seconds
-}
-
-type StatusCode int
-
-func (code StatusCode) IsSuccess() bool {
-	return code >= 200 && code <= 299
-}
-
-type ClientRequest struct {
-	Method       string
-	Path         string
-	RequestBody  interface{}
-	ResponseBody interface{}
-}

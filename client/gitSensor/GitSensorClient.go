@@ -31,6 +31,25 @@ func GetGitSensorConfig() (*GitSensorConfig, error) {
 	return cfg, err
 }
 
+// ----------------------impl
+type GitSensorConfig struct {
+	Url     string `env:"GIT_SENSOR_URL" envDefault:"http://localhost:9999"`
+	Timeout int    `env:"GIT_SENSOR_TIMEOUT" envDefault:"0"` // in seconds
+}
+
+type StatusCode int
+
+func (code StatusCode) IsSuccess() bool {
+	return code >= 200 && code <= 299
+}
+
+type ClientRequest struct {
+	Method       string
+	Path         string
+	RequestBody  interface{}
+	ResponseBody interface{}
+}
+
 func (session *GitSensorClientImpl) doRequest(clientRequest *ClientRequest) (resBody []byte, resCode *StatusCode, err error) {
 	if clientRequest.ResponseBody == nil {
 		return nil, nil, fmt.Errorf("responce body cant be nil")
