@@ -43,7 +43,16 @@ func NewNatsSubscription(pubSubClient *pubsub.PubSubClientServiceImpl,
 		ns.logger.Infow("app release saved ", "apprelease", release)
 	}
 
-	err := pubSubClient.Subscribe(pubsub.CD_SUCCESS, callback)
+	var loggerFunc pubsub.LoggerFunc = func(msg model.PubSubMsg) (string, []interface{}) {
+		deploymentEvent := &pkg.DeploymentEvent{}
+		err := json.Unmarshal([]byte(msg.Data), &deploymentEvent)
+		if err != nil {
+			return "error while unmarshalling deploymentEvent object", []interface{}{"err", err, "msg", msg.Data}
+		}
+		return "got message for deployment stage completion", []interface{}{"envId", deploymentEvent.EnvironmentId, "appId", deploymentEvent.ApplicationId, "ciArtifactId", deploymentEvent.CiArtifactId}
+	}
+
+	err := pubSubClient.Subscribe(pubsub.CD_SUCCESS, callback, loggerFunc)
 	if err != nil {
 		ns.logger.Errorw("Error while subscribing to pubsub client", "topic", pubsub.CD_SUCCESS, "error", err)
 	}
