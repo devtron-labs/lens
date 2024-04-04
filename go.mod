@@ -48,12 +48,12 @@ require (
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 )
 
 require (
-	github.com/devtron-labs/common-lib v0.0.9-0.20231226070212-c47f7a07ebf5
+	github.com/devtron-labs/common-lib v0.0.16-0.20240318063710-69cb957d019a
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 )
