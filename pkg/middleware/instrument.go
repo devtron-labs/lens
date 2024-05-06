@@ -47,7 +47,7 @@ var currentRequestGauge = promauto.NewGaugeVec(prometheus.GaugeOpts{
 
 // prometheusMiddleware implements mux.MiddlewareFunc.
 func PrometheusMiddleware(next http.Handler) http.Handler {
-	prometheus.MustRegister(requestCounter)
+	//prometheus.MustRegister(requestCounter)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		route := mux.CurrentRoute(r)
