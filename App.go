@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	pubsub "github.com/devtron-labs/common-lib/pubsub-lib"
+	"github.com/devtron-labs/lens/pkg/middleware"
 	"net/http"
 	"os"
 	"time"
@@ -38,6 +39,7 @@ func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, Inge
 
 func (app *App) Start() {
 	port := 8080 //TODO: extract from environment variable
+	app.MuxRouter.Router.Use(middleware.PrometheusMiddleware)
 	app.Logger.Infow("starting server on ", "port", port)
 	app.MuxRouter.Init()
 	server := &http.Server{Addr: fmt.Sprintf(":%d", port), Handler: app.MuxRouter.Router}
