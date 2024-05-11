@@ -28,7 +28,7 @@ import (
 
 var (
 	httpDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name: "orchestrator_http_duration_seconds",
+		Name: "lens_http_duration_seconds",
 		Help: "Duration of HTTP requests.",
 	}, []string{"path", "method", "status"})
 )
