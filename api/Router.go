@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 	"net/http"
 )
@@ -19,7 +20,7 @@ func NewMuxRouter(logger *zap.SugaredLogger, restHandler RestHandler) *MuxRouter
 
 func (r MuxRouter) Init() {
 	r.Router.StrictSlash(true)
-	//r.Router.Handle("/metrics", promhttp.Handler())
+	r.Router.Handle("/metrics", promhttp.Handler())
 	r.Router.Path("/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
 		writer.WriteHeader(200)
