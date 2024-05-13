@@ -26,10 +26,10 @@ import (
 
 const (
 	closeNotifier = 1 << iota
-	flusher
-	hijacker
-	readerFrom
-	pusher
+	flusher       = 2
+	hijacker      = 4
+	readerFrom    = 8
+	pusher        = 16
 )
 
 type delegator interface {
