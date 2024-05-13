@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	closeNotifier = 1 << iota
+	closeNotifier = 1
 	flusher       = 2
 	hijacker      = 4
 	readerFrom    = 8
