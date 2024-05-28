@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2024. Devtron Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package pkg
 
 import (
@@ -31,7 +47,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   10,
 			ChangeSizeLineDeleted: 10,
-			TriggerTime:           currentTime.AddDate(0, 0 , -1),
+			TriggerTime:           currentTime.AddDate(0, 0, -1),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -65,7 +81,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   12,
 			ChangeSizeLineDeleted: 12,
-			TriggerTime:           currentTime.AddDate(0,0, -3),
+			TriggerTime:           currentTime.AddDate(0, 0, -3),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Failure,
 			ProcessStage:          0,
@@ -101,7 +117,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   10,
 			ChangeSizeLineDeleted: 10,
-			TriggerTime:           currentTime.AddDate(0, 0 , -1),
+			TriggerTime:           currentTime.AddDate(0, 0, -1),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Failure,
 			ProcessStage:          0,
@@ -135,7 +151,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   12,
 			ChangeSizeLineDeleted: 12,
-			TriggerTime:           currentTime.AddDate(0,0, -3),
+			TriggerTime:           currentTime.AddDate(0, 0, -3),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Failure,
 			ProcessStage:          0,
@@ -144,7 +160,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			LeadTime:              nil,
 		},
 	}
-	lastReleaseF := sql.AppRelease {
+	lastReleaseF := sql.AppRelease{
 		Id:                    10,
 		AppId:                 0,
 		EnvironmentId:         0,
@@ -153,7 +169,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		PipelineOverrideId:    0,
 		ChangeSizeLineAdded:   12,
 		ChangeSizeLineDeleted: 12,
-		TriggerTime:           currentTime.AddDate(0,0, -4),
+		TriggerTime:           currentTime.AddDate(0, 0, -4),
 		ReleaseType:           sql.RollForward,
 		ReleaseStatus:         sql.Success,
 		ProcessStage:          0,
@@ -171,7 +187,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   10,
 			ChangeSizeLineDeleted: 10,
-			TriggerTime:           currentTime.AddDate(0, 0 , -1),
+			TriggerTime:           currentTime.AddDate(0, 0, -1),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Failure,
 			ProcessStage:          0,
@@ -205,7 +221,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   12,
 			ChangeSizeLineDeleted: 12,
-			TriggerTime:           currentTime.AddDate(0,0, -3),
+			TriggerTime:           currentTime.AddDate(0, 0, -3),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -214,7 +230,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			LeadTime:              nil,
 		},
 	}
-	lastReleaseF1 := sql.AppRelease {
+	lastReleaseF1 := sql.AppRelease{
 		Id:                    10,
 		AppId:                 0,
 		EnvironmentId:         0,
@@ -223,7 +239,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		PipelineOverrideId:    0,
 		ChangeSizeLineAdded:   12,
 		ChangeSizeLineDeleted: 12,
-		TriggerTime:           currentTime.AddDate(0,0, -4),
+		TriggerTime:           currentTime.AddDate(0, 0, -4),
 		ReleaseType:           sql.RollForward,
 		ReleaseStatus:         sql.Success,
 		ProcessStage:          0,
@@ -241,7 +257,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   10,
 			ChangeSizeLineDeleted: 10,
-			TriggerTime:           currentTime.AddDate(0, 0 , -1),
+			TriggerTime:           currentTime.AddDate(0, 0, -1),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -275,7 +291,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   12,
 			ChangeSizeLineDeleted: 12,
-			TriggerTime:           currentTime.AddDate(0,0, -3),
+			TriggerTime:           currentTime.AddDate(0, 0, -3),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Failure,
 			ProcessStage:          0,
@@ -284,7 +300,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			LeadTime:              nil,
 		},
 	}
-	lastReleaseF2 := sql.AppRelease {
+	lastReleaseF2 := sql.AppRelease{
 		Id:                    10,
 		AppId:                 0,
 		EnvironmentId:         0,
@@ -293,7 +309,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		PipelineOverrideId:    0,
 		ChangeSizeLineAdded:   12,
 		ChangeSizeLineDeleted: 12,
-		TriggerTime:           currentTime.AddDate(0,0, -4),
+		TriggerTime:           currentTime.AddDate(0, 0, -4),
 		ReleaseType:           sql.RollForward,
 		ReleaseStatus:         sql.Success,
 		ProcessStage:          0,
@@ -311,7 +327,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   10,
 			ChangeSizeLineDeleted: 10,
-			TriggerTime:           currentTime.AddDate(0, 0 , -1),
+			TriggerTime:           currentTime.AddDate(0, 0, -1),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -345,7 +361,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   12,
 			ChangeSizeLineDeleted: 12,
-			TriggerTime:           currentTime.AddDate(0,0, -3),
+			TriggerTime:           currentTime.AddDate(0, 0, -3),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -354,7 +370,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			LeadTime:              nil,
 		},
 	}
-	lastReleaseF3 := sql.AppRelease {
+	lastReleaseF3 := sql.AppRelease{
 		Id:                    10,
 		AppId:                 0,
 		EnvironmentId:         0,
@@ -363,7 +379,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		PipelineOverrideId:    0,
 		ChangeSizeLineAdded:   12,
 		ChangeSizeLineDeleted: 12,
-		TriggerTime:           currentTime.AddDate(0,0, -4),
+		TriggerTime:           currentTime.AddDate(0, 0, -4),
 		ReleaseType:           sql.RollForward,
 		ReleaseStatus:         sql.Success,
 		ProcessStage:          0,
@@ -381,7 +397,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   10,
 			ChangeSizeLineDeleted: 10,
-			TriggerTime:           currentTime.AddDate(0, 0 , -1),
+			TriggerTime:           currentTime.AddDate(0, 0, -1),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -415,7 +431,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			PipelineOverrideId:    0,
 			ChangeSizeLineAdded:   12,
 			ChangeSizeLineDeleted: 12,
-			TriggerTime:           currentTime.AddDate(0,0, -3),
+			TriggerTime:           currentTime.AddDate(0, 0, -3),
 			ReleaseType:           sql.RollForward,
 			ReleaseStatus:         sql.Success,
 			ProcessStage:          0,
@@ -424,7 +440,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 			LeadTime:              nil,
 		},
 	}
-	lastReleaseS := sql.AppRelease {
+	lastReleaseS := sql.AppRelease{
 		Id:                    10,
 		AppId:                 0,
 		EnvironmentId:         0,
@@ -433,7 +449,7 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		PipelineOverrideId:    0,
 		ChangeSizeLineAdded:   12,
 		ChangeSizeLineDeleted: 12,
-		TriggerTime:           currentTime.AddDate(0,0, -4),
+		TriggerTime:           currentTime.AddDate(0, 0, -4),
 		ReleaseType:           sql.RollForward,
 		ReleaseStatus:         sql.Success,
 		ProcessStage:          0,
@@ -451,10 +467,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "all empty test",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
@@ -476,10 +492,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "complete data with lastRelease nil",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
@@ -501,10 +517,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "complete data",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
@@ -526,10 +542,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "All Failed F-F-F",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
@@ -551,10 +567,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "failed - S-F-F",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
@@ -576,10 +592,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "Failed - F-F-S",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
@@ -601,10 +617,10 @@ func TestDeploymentMetricServiceImpl_populateMetrics(t *testing.T) {
 		{
 			name: "Failed - S-F-S",
 			fields: fields{
-				logger: nil,
-				appReleaseRepository: nil,
+				logger:                     nil,
+				appReleaseRepository:       nil,
 				pipelineMaterialRepository: nil,
-				leadTimeRepository: nil,
+				leadTimeRepository:         nil,
 			},
 			wantErr: false,
 			args: args{
