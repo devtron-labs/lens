@@ -72,5 +72,5 @@ func NewNatsSubscription(pubSubClient *pubsub.PubSubClientServiceImpl,
 	if err != nil {
 		ns.logger.Errorw("Error while subscribing to pubsub client", "topic", pubsub.CD_SUCCESS, "error", err)
 	}
-	return ns, nil
+	return ns, err
 }

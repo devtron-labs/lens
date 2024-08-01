@@ -48,7 +48,10 @@ func InitializeApp() (*App, error) {
 	ingestionServiceImpl := pkg.NewIngestionServiceImpl(sugaredLogger, appReleaseRepositoryImpl, pipelineMaterialRepositoryImpl, leadTimeRepositoryImpl, gitSensorClientImpl, gitSensorGrpcClientImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, deploymentMetricServiceImpl, ingestionServiceImpl)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
-	pubSubClientServiceImpl := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
+	pubSubClientServiceImpl, err := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
+	if err != nil {
+		return nil, err
+	}
 	natsSubscriptionImpl, err := client.NewNatsSubscription(pubSubClientServiceImpl, sugaredLogger, ingestionServiceImpl)
 	if err != nil {
 		return nil, err
