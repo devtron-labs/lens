@@ -7,7 +7,7 @@ github.com/caarlos0/env
 # github.com/cespare/xxhash/v2 v2.2.0
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
-# github.com/devtron-labs/common-lib v0.0.22-0.20240705073412-32e32c499160
+# github.com/devtron-labs/common-lib v0.14.0
 ## explicit; go 1.21
 github.com/devtron-labs/common-lib/constants
 github.com/devtron-labs/common-lib/pubsub-lib
