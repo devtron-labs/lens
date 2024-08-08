@@ -1,8 +1,6 @@
 module github.com/devtron-labs/lens
 
-go 1.21
-
-toolchain go1.22.3
+go 1.20
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
