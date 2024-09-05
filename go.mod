@@ -1,6 +1,8 @@
 module github.com/devtron-labs/lens
 
-go 1.18
+go 1.21
+
+toolchain go1.22.3
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
@@ -41,17 +43,17 @@ require (
 	go.opentelemetry.io/otel/trace v1.20.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/crypto v0.25.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 )
 
 require (
-	github.com/devtron-labs/common-lib v0.0.22-0.20240705073412-32e32c499160
+	github.com/devtron-labs/common-lib v0.16.1-0.20240904133334-7918e7c25b63
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 )
