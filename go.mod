@@ -19,6 +19,7 @@ require (
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/docker/cli v24.0.6+incompatible // indirect
 	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
@@ -53,7 +54,7 @@ require (
 )
 
 require (
-	github.com/devtron-labs/common-lib v0.16.1-0.20240904133334-7918e7c25b63
+	github.com/devtron-labs/common-lib v0.16.1-0.20240911071031-2625327bc7b4
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 )
